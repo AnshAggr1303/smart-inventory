@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Scan a Bill - Smart Inventory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Inter+Tight:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'Inter Tight', monospace; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "surface-container-highest": "#e3e3d9",
+                "inverse-primary": "#c0c1ff",
+                "on-error": "#ffffff",
+                "on-tertiary-fixed": "#2a1700",
+                "inverse-on-surface": "#f2f1e7",
+                "outline-variant": "#c6c4d9",
+                "secondary": "#5356a8",
+                "secondary-container": "#a3a6fe",
+                "surface-container-low": "#f5f4ea",
+                "on-primary": "#ffffff",
+                "surface-bright": "#fafaef",
+                "primary-fixed-dim": "#c0c1ff",
+                "primary": "#1e0cde",
+                "surface-container": "#efeee4",
+                "surface-tint": "#403ff6",
+                "tertiary-fixed-dim": "#ffb95f",
+                "secondary-fixed": "#e1e0ff",
+                "inverse-surface": "#30312a",
+                "surface-dim": "#dbdbd0",
+                "on-secondary-fixed-variant": "#3b3d8e",
+                "surface-container-high": "#e9e9de",
+                "background": "#fafaef",
+                "on-primary-fixed-variant": "#2215e0",
+                "error-container": "#ffdad6",
+                "surface": "#fafaef",
+                "on-error-container": "#93000a",
+                "secondary-fixed-dim": "#c0c1ff",
+                "on-tertiary-fixed-variant": "#653e00",
+                "on-background": "#1b1c16",
+                "tertiary-fixed": "#ffddb8",
+                "on-secondary-container": "#363788",
+                "on-tertiary-container": "#ffcb8f",
+                "primary-container": "#3d3bf3",
+                "outline": "#767588",
+                "tertiary-container": "#825100",
+                "surface-container-lowest": "#ffffff",
+                "tertiary": "#623c00",
+                "error": "#ba1a1a",
+                "on-secondary-fixed": "#0b0763",
+                "primary-fixed": "#e1e0ff",
+                "on-surface-variant": "#454556",
+                "surface-variant": "#e3e3d9",
+                "on-primary-container": "#d1d0ff",
+                "on-surface": "#1b1c16",
+                "on-secondary": "#ffffff",
+                "on-tertiary": "#ffffff",
+                "on-primary-fixed": "#07006c"
+              },
+              fontFamily: {
+                "headline": ["Inter"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar (Shared Component Anchor) -->
+<aside class="h-screen w-60 fixed left-0 top-0 overflow-y-auto bg-surface-container-low flex flex-col p-4 space-y-2 z-40">
+<div class="flex items-center gap-3 px-2 mb-6">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div>
+<h1 class="text-lg font-bold text-on-surface leading-tight">Smart Inventory</h1>
+<p class="text-[10px] uppercase tracking-wider font-semibold opacity-60">AI-Powered Management</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:bg-surface-bright rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:bg-surface-bright rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<!-- Active State: Bill Scanner -->
+<a class="flex items-center gap-3 px-4 py-3 bg-surface-container-lowest text-primary-container rounded-lg shadow-sm font-semibold scale-[0.98] transition-all" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="text-sm font-medium">Bill Scanner</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:bg-surface-bright rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="text-sm font-medium">Recipes</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:bg-surface-bright rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="text-sm font-medium">Agents</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:bg-surface-bright rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="text-sm font-medium">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:bg-surface-bright rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="text-sm font-medium">Suppliers</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:bg-surface-bright rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="pt-4 border-t border-outline-variant/15 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:bg-surface-bright rounded-lg" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="text-sm font-medium">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:bg-surface-bright rounded-lg" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-sm font-medium">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-60 min-h-screen flex flex-col">
+<!-- Header -->
+<header class="sticky top-0 z-30 bg-surface/80 backdrop-blur-md px-8 py-6 flex justify-between items-center">
+<h2 class="text-3xl font-bold tracking-tight text-on-surface">Scan a Bill</h2>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-tertiary-fixed rounded-full">
+<span class="material-symbols-outlined text-on-tertiary-fixed text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="text-xs font-semibold text-on-tertiary-fixed uppercase tracking-wider">Gemini Vision Active</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</header>
+<!-- Page Canvas -->
+<div class="px-8 pb-32 flex flex-col lg:flex-row gap-8">
+<!-- LEFT PANEL — Upload -->
+<section class="flex-1 space-y-6">
+<div class="bg-surface-container-low p-8 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-primary-container/30 transition-all hover:border-primary-container/60 min-h-[400px]">
+<div class="w-16 h-16 bg-primary-fixed rounded-2xl flex items-center justify-center text-primary mb-6">
+<span class="material-symbols-outlined text-[40px]">photo_camera</span>
+</div>
+<p class="text-lg font-medium text-on-surface mb-2 text-center">Drop a bill photo here</p>
+<p class="text-sm text-on-surface/60 mb-8 text-center max-w-xs">Supports JPG, PNG, PDF. Gemini Vision reads the bill details automatically.</p>
+<button class="px-6 py-3 bg-surface-container-lowest text-on-surface font-semibold rounded-lg shadow-sm border border-outline-variant/15 hover:shadow-md transition-all active:scale-95">
+                        Choose file
+                    </button>
+</div>
+<div class="space-y-3">
+<label class="text-[10px] uppercase tracking-wider font-semibold text-on-surface/50 px-1">Or paste bill text manually</label>
+<textarea class="w-full h-32 bg-surface-container-lowest border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary-fixed placeholder:text-on-surface/30 resize-none shadow-sm" placeholder="Paste OCR text or raw data here..."></textarea>
+</div>
+</section>
+<!-- RIGHT PANEL — OCR Preview -->
+<section class="flex-[1.5] space-y-6">
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col border border-outline-variant/15">
+<div class="px-6 py-4 bg-surface-container-low/50 border-b border-outline-variant/15 flex justify-between items-center">
+<h3 class="text-sm font-bold uppercase tracking-widest text-on-surface/70">OCR Preview (What we found)</h3>
+<div class="flex gap-4">
+<div class="flex flex-col">
+<label class="text-[10px] text-on-surface/40 uppercase font-bold">Supplier</label>
+<input class="bg-transparent border-none p-0 text-sm font-semibold focus:ring-0 text-primary" type="text" value="Ram Dairy"/>
+</div>
+<div class="flex flex-col">
+<label class="text-[10px] text-on-surface/40 uppercase font-bold">Date</label>
+<input class="bg-transparent border-none p-0 text-sm font-semibold focus:ring-0" type="date" value="2024-05-24"/>
+</div>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/30">
+<th class="px-6 py-3 text-[10px] uppercase tracking-wider font-bold text-on-surface/50">Item Name</th>
+<th class="px-4 py-3 text-[10px] uppercase tracking-wider font-bold text-on-surface/50 text-center">Qty</th>
+<th class="px-4 py-3 text-[10px] uppercase tracking-wider font-bold text-on-surface/50 text-center">Unit</th>
+<th class="px-6 py-3 text-[10px] uppercase tracking-wider font-bold text-on-surface/50 text-right">Price</th>
+<th class="px-4 py-3"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-surface-container-low/20 transition-colors">
+<td class="px-6 py-4">
+<input class="w-full bg-transparent border-none p-0 text-sm font-medium focus:ring-0" type="text" value="Paneer"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input class="w-12 bg-transparent border-none p-0 text-sm font-mono text-center focus:ring-0" type="text" value="5"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input class="w-12 bg-transparent border-none p-0 text-sm text-center focus:ring-0 opacity-60" type="text" value="kg"/>
+</td>
+<td class="px-6 py-4 text-right">
+<input class="w-24 bg-transparent border-none p-0 text-sm font-mono text-right focus:ring-0 font-bold" type="text" value="₹1,700"/>
+</td>
+<td class="px-4 py-4 text-center">
+<button class="text-on-surface/30 hover:text-error transition-colors">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/20 transition-colors">
+<td class="px-6 py-4">
+<input class="w-full bg-transparent border-none p-0 text-sm font-medium focus:ring-0" type="text" value="Maida"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input class="w-12 bg-transparent border-none p-0 text-sm font-mono text-center focus:ring-0" type="text" value="10"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input class="w-12 bg-transparent border-none p-0 text-sm text-center focus:ring-0 opacity-60" type="text" value="kg"/>
+</td>
+<td class="px-6 py-4 text-right">
+<input class="w-24 bg-transparent border-none p-0 text-sm font-mono text-right focus:ring-0 font-bold" type="text" value="₹380"/>
+</td>
+<td class="px-4 py-4 text-center">
+<button class="text-on-surface/30 hover:text-error transition-colors">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/20 transition-colors">
+<td class="px-6 py-4">
+<input class="w-full bg-transparent border-none p-0 text-sm font-medium focus:ring-0" type="text" value="Tomato"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input class="w-12 bg-transparent border-none p-0 text-sm font-mono text-center focus:ring-0" type="text" value="3"/>
+</td>
+<td class="px-4 py-4 text-center">
+<input class="w-12 bg-transparent border-none p-0 text-sm text-center focus:ring-0 opacity-60" type="text" value="kg"/>
+</td>
+<td class="px-6 py-4 text-right">
+<input class="w-24 bg-transparent border-none p-0 text-sm font-mono text-right focus:ring-0 font-bold" type="text" value="₹90"/>
+</td>
+<td class="px-4 py-4 text-center">
+<button class="text-on-surface/30 hover:text-error transition-colors">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<button class="w-full py-4 text-sm font-semibold text-primary-container hover:bg-surface-container transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg">add</span>
+                        Add row manually
+                    </button>
+</div>
+<!-- Summary Card -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-secondary-container/20 p-6 rounded-2xl border border-secondary-container/10">
+<p class="text-[10px] uppercase font-bold text-on-secondary-container/60 mb-1">Items Detected</p>
+<p class="text-2xl font-black text-on-secondary-container font-mono">03</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/10">
+<p class="text-[10px] uppercase font-bold text-on-surface/40 mb-1">Tax Estimate</p>
+<p class="text-2xl font-black text-on-surface font-mono">₹144.50</p>
+</div>
+</div>
+</section>
+</div>
+<!-- STICKY BOTTOM BAR -->
+<footer class="fixed bottom-0 left-60 right-0 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/15 px-8 py-5 flex items-center justify-between z-50">
+<div class="flex items-center gap-6">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase font-bold tracking-widest text-on-surface/40">Total Amount</span>
+<span class="text-3xl font-black font-mono text-primary">₹2,170</span>
+</div>
+<div class="h-8 w-px bg-outline-variant/30"></div>
+<p class="text-xs text-on-surface/60 max-w-[200px]">Confirming will update stock levels for 3 items from Ram Dairy.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-8 py-3.5 text-on-surface/60 font-bold text-sm uppercase tracking-widest hover:text-on-surface transition-colors">
+                    Discard
+                </button>
+<button class="px-10 py-3.5 bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold text-sm rounded-lg shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all active:scale-95 flex items-center gap-3">
+                    Confirm &amp; Add to Stock
+                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+</footer>
+</main>
+<!-- Visual Polish: Floating Insight Toast (Design System specific) -->
+<div class="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top-4 duration-500">
+<div class="bg-surface-container-lowest/80 backdrop-blur-xl border border-outline-variant/15 p-4 rounded-xl shadow-2xl flex items-center gap-4 max-w-xs">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Insight</p>
+<p class="text-xs text-on-surface/70 leading-relaxed">Maida price is 5% lower than last month's average from this supplier.</p>
+</div>
+</div>
+</div>
+</body></html>

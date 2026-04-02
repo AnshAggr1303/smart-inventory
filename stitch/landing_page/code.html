@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Smart Inventory | AI-Powered Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;family=Inter+Tight:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-highest": "#e3e3d9",
+                        "inverse-primary": "#c0c1ff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "inverse-on-surface": "#f2f1e7",
+                        "outline-variant": "#c6c4d9",
+                        "secondary": "#5356a8",
+                        "secondary-container": "#a3a6fe",
+                        "surface-container-low": "#f5f4ea",
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#fafaef",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "primary": "#1e0cde",
+                        "surface-container": "#efeee4",
+                        "surface-tint": "#403ff6",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "secondary-fixed": "#e1e0ff",
+                        "inverse-surface": "#30312a",
+                        "surface-dim": "#dbdbd0",
+                        "on-secondary-fixed-variant": "#3b3d8e",
+                        "surface-container-high": "#e9e9de",
+                        "background": "#fafaef",
+                        "on-primary-fixed-variant": "#2215e0",
+                        "error-container": "#ffdad6",
+                        "surface": "#fafaef",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#c0c1ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "on-background": "#1b1c16",
+                        "tertiary-fixed": "#ffddb8",
+                        "on-secondary-container": "#363788",
+                        "on-tertiary-container": "#ffcb8f",
+                        "primary-container": "#3d3bf3",
+                        "outline": "#767588",
+                        "tertiary-container": "#825100",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#623c00",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#0b0763",
+                        "primary-fixed": "#e1e0ff",
+                        "on-surface-variant": "#454556",
+                        "surface-variant": "#e3e3d9",
+                        "on-primary-container": "#d1d0ff",
+                        "on-surface": "#1b1c16",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#07006c"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .grid-dots {
+            background-image: radial-gradient(circle, #3d3bf3 1px, transparent 1px);
+            background-size: 24px 24px;
+            opacity: 0.05;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopNavBar -->
+<nav class="bg-[#FAFAEF] sticky top-0 z-50 docked full-width shadow-none border-none">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#3D3BF3] text-2xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-xl font-black text-[#1B1C16]">Smart Inventory</span>
+</div>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-[#3D3BF3] font-bold border-b-2 border-[#3D3BF3] pb-1 text-sm Inter" href="#">Features</a>
+<a class="text-[#1B1C16]/70 hover:text-[#3D3BF3] transition-colors duration-200 text-sm Inter" href="#">Industries</a>
+<a class="text-[#1B1C16]/70 hover:text-[#3D3BF3] transition-colors duration-200 text-sm Inter" href="#">Pricing</a>
+<a class="text-[#1B1C16]/70 hover:text-[#3D3BF3] transition-colors duration-200 text-sm Inter" href="#">Docs</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-sm font-semibold text-[#1B1C16]/70 hover:text-[#3D3BF3] px-4 py-2 transition-all">Log in</button>
+<button class="bg-primary-container text-white px-6 py-2.5 rounded-lg font-bold text-sm shadow-sm hover:opacity-90 active:scale-95 transition-all">Get started free</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative overflow-hidden pt-16 pb-24 md:pt-24 md:pb-32">
+<div class="absolute inset-0 grid-dots -z-10"></div>
+<div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<div class="space-y-8">
+<div class="inline-flex items-center gap-2 bg-primary-fixed px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-semibold text-on-primary-fixed">
+<span class="material-symbols-outlined text-xs">auto_awesome</span>
+                    AI-Powered · Free to start · Works for any industry
+                </div>
+<h1 class="text-5xl md:text-7xl font-bold tracking-tight text-on-background leading-[1.1]">
+                    Your inventory. <br/>
+<span class="text-primary-container">On autopilot.</span>
+</h1>
+<p class="text-lg text-on-surface-variant max-w-xl leading-relaxed">
+                    Scan any bill, define your recipes, and let AI agents handle reordering, shrinkage detection, and demand forecasting — automatically.
+                </p>
+<div class="flex flex-wrap gap-4 pt-4">
+<button class="bg-primary-container text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:translate-y-[-1px] transition-all flex items-center gap-2">
+                        Start for free <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="bg-surface-container-lowest border border-outline-variant/15 text-on-surface px-8 py-4 rounded-xl font-bold text-lg hover:bg-surface-container-low transition-all">
+                        See how it works
+                    </button>
+</div>
+<div class="flex items-center gap-3 text-xs text-on-surface-variant/60 font-medium">
+<span class="material-symbols-outlined text-sm">verified_user</span>
+                    Free Groq + Gemini keys work out of the box. No credit card needed.
+                </div>
+</div>
+<!-- Hero Mockup -->
+<div class="relative">
+<div class="bg-surface-container-lowest p-8 rounded-[2rem] shadow-2xl border border-outline-variant/10">
+<div class="flex justify-between items-center mb-8">
+<div class="flex flex-col">
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Live Status</span>
+<span class="text-2xl font-black">Stock Overview</span>
+</div>
+<span class="material-symbols-outlined text-primary-container bg-primary-fixed p-2 rounded-lg">analytics</span>
+</div>
+<div class="space-y-4">
+<!-- Item 1 -->
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-lowest rounded-lg flex items-center justify-center text-xl">🥑</div>
+<div>
+<div class="text-sm font-bold">Hass Avocado (Case)</div>
+<div class="text-[10px] font-mono text-on-surface-variant">SKU-00921</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-bold font-mono text-primary">82%</div>
+<div class="text-[10px] uppercase font-semibold text-on-surface-variant">Optimal</div>
+</div>
+</div>
+<!-- Item 2 (Low Stock) -->
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl ring-1 ring-tertiary-fixed/50">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-lowest rounded-lg flex items-center justify-center text-xl">🥖</div>
+<div>
+<div class="text-sm font-bold">Sourdough Loaf</div>
+<div class="text-[10px] font-mono text-on-surface-variant">SKU-00182</div>
+</div>
+</div>
+<div class="text-right">
+<div class="bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded text-[10px] font-bold uppercase mb-1">Low Stock</div>
+<div class="text-sm font-bold font-mono">12 units</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-lowest rounded-lg flex items-center justify-center text-xl">🥛</div>
+<div>
+<div class="text-sm font-bold">Oat Milk 1L</div>
+<div class="text-[10px] font-mono text-on-surface-variant">SKU-00443</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-sm font-bold font-mono">240 units</div>
+<div class="text-[10px] uppercase font-semibold text-on-surface-variant">In Stock</div>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-outline-variant/10 flex items-center justify-between">
+<div class="flex -space-x-2">
+<img alt="Avatar" class="w-8 h-8 rounded-full border-2 border-white" data-alt="Close up portrait of a smiling young professional woman with dark hair and glasses in a corporate headshot style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrX05B6p3xgEK8FuhsKTULC9ztQAxZ8iAPCLW5p1fHvGhfr8SWF96Qr7l1vFCaEN1ymnQ3z_NpG-0BXbhCT_UBGKFVgCB64_Emk4c--Eqnh15A-wIXo4kd4Rw14gmdfcS6sQIo-2BjxVceXDKbTQ8om8sBCgcs81rIt6jLl5IHPrc5NpxN7fK6YyMRLa_0ejHIvvG049YoGn6nVtrDtU7Ifrde3vNWTx_oR6zpEt744O6x6rg5JiQNt4_2BVrtb-Zw4qBeHiVFYQ"/>
+<img alt="Avatar" class="w-8 h-8 rounded-full border-2 border-white" data-alt="Close up portrait of a middle-aged man with beard and friendly expression in a modern office environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWg8BbNOzXpQnXPlHwc6qfeS_16V9bYNB-4GAUGIpET1wxkS9kP61JWVbF11eZnUEu7CFipENOkVLPdLbjJzUujkQTxs0RuCwVYjhyHgA0rm7OHwbOD2XAMnFRgCgvhs2iZb6LcBsuukKZ57rP3nmMim500SCqmuWFInYanlrB4-sycEA6U-IMOg5rzrVq8DyRuwSqELUPWhkPCOWzu2ILL1BMI8II2BfoPKnPZzfesdJpp_LZxX6nLjv93OyG9LCuV_buPQ40WA"/>
+</div>
+<div class="text-[10px] font-semibold text-on-surface-variant uppercase">3 Agents monitoring 24/7</div>
+</div>
+</div>
+<!-- Glass Decorative Element -->
+<div class="absolute -bottom-6 -left-6 bg-surface-container-lowest/80 backdrop-blur-xl p-4 rounded-2xl shadow-xl border border-outline-variant/20 hidden md:block">
+<div class="flex items-center gap-3">
+<div class="bg-primary-container p-2 rounded-full">
+<span class="material-symbols-outlined text-white text-sm" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+</div>
+<div class="pr-4">
+<div class="text-[10px] font-bold uppercase text-on-surface-variant">Recent Scan</div>
+<div class="text-sm font-bold">Sysco Invoice #2931</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Social Proof -->
+<section class="bg-surface-container-low py-12">
+<div class="max-w-7xl mx-auto px-6">
+<p class="text-center text-[10px] uppercase font-bold tracking-[0.2em] text-on-surface-variant/40 mb-8">Trusted by global industry leaders</p>
+<div class="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-40 grayscale">
+<span class="text-2xl font-black">LOGOTYPE</span>
+<span class="text-2xl font-black">MODERN_CO</span>
+<span class="text-2xl font-black">STOCK_SYS</span>
+<span class="text-2xl font-black">RETAIL_PRO</span>
+<span class="text-2xl font-black">GLOBAL_HUB</span>
+</div>
+</div>
+</section>
+<!-- Features Strip -->
+<section class="py-24 bg-surface-container-lowest">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<div class="group">
+<div class="w-12 h-12 bg-primary-fixed rounded-xl flex items-center justify-center text-primary-container mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-2xl">barcode_scanner</span>
+</div>
+<h3 class="text-xl font-bold mb-3">OCR Bill Scanning</h3>
+<p class="text-on-surface-variant leading-relaxed">Point your camera at any paper or digital bill. Our AI extracts every line item and updates your stock levels instantly.</p>
+</div>
+<div class="group">
+<div class="w-12 h-12 bg-secondary-fixed rounded-xl flex items-center justify-center text-secondary mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-2xl">restaurant_menu</span>
+</div>
+<h3 class="text-xl font-bold mb-3">Recipe Engine</h3>
+<p class="text-on-surface-variant leading-relaxed">Sell a dish, deduct individual ingredients. Link your POS to inventory for zero manual entry and real-time food cost analysis.</p>
+</div>
+<div class="group">
+<div class="w-12 h-12 bg-tertiary-fixed rounded-xl flex items-center justify-center text-tertiary mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-2xl">smart_toy</span>
+</div>
+<h3 class="text-xl font-bold mb-3">AI Reorder Agents</h3>
+<p class="text-on-surface-variant leading-relaxed">Agents watch stock 24/7. When levels hit your threshold, they automatically draft emails or message suppliers for approval.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Industries Section -->
+<section class="py-24 bg-surface">
+<div class="max-w-7xl mx-auto px-6">
+<div class="text-center mb-16 space-y-4">
+<h2 class="text-4xl font-black tracking-tight">Built for every business that holds stock</h2>
+<div class="w-16 h-1 bg-primary-container mx-auto rounded-full"></div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+<!-- Restaurant -->
+<div class="bg-surface-container-lowest p-8 rounded-2xl hover:bg-surface-container-low transition-all border border-outline-variant/10 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-4xl text-primary-container mb-4">restaurant</span>
+<span class="font-bold text-lg">Restaurant</span>
+</div>
+<!-- Pharmacy -->
+<div class="bg-surface-container-lowest p-8 rounded-2xl hover:bg-surface-container-low transition-all border border-outline-variant/10 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-4xl text-primary-container mb-4">medical_services</span>
+<span class="font-bold text-lg">Pharmacy</span>
+</div>
+<!-- Retail -->
+<div class="bg-surface-container-lowest p-8 rounded-2xl hover:bg-surface-container-low transition-all border border-outline-variant/10 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-4xl text-primary-container mb-4">shopping_bag</span>
+<span class="font-bold text-lg">Retail</span>
+</div>
+<!-- Hotel -->
+<div class="bg-surface-container-lowest p-8 rounded-2xl hover:bg-surface-container-low transition-all border border-outline-variant/10 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-4xl text-primary-container mb-4">hotel</span>
+<span class="font-bold text-lg">Hotel</span>
+</div>
+<!-- Manufacturing -->
+<div class="bg-surface-container-lowest p-8 rounded-2xl hover:bg-surface-container-low transition-all border border-outline-variant/10 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-4xl text-primary-container mb-4">precision_manufacturing</span>
+<span class="font-bold text-lg">Manufacturing</span>
+</div>
+<!-- Salon -->
+<div class="bg-surface-container-lowest p-8 rounded-2xl hover:bg-surface-container-low transition-all border border-outline-variant/10 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-4xl text-primary-container mb-4">content_cut</span>
+<span class="font-bold text-lg">Salon</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="py-20 px-6">
+<div class="max-w-5xl mx-auto bg-primary-container rounded-[2.5rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl">
+<div class="absolute inset-0 grid-dots opacity-10"></div>
+<div class="relative z-10 space-y-8">
+<h2 class="text-3xl md:text-5xl font-black text-white">Ready to stop counting stock manually?</h2>
+<p class="text-on-primary-container text-lg max-w-2xl mx-auto">Join 12,000+ businesses automating their back-office with Smart Inventory AI.</p>
+<div class="pt-4">
+<button class="bg-white text-primary-container px-10 py-5 rounded-xl font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-xl">
+                        Create your free account →
+                    </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-on-background text-white pt-20 pb-12">
+<div class="max-w-7xl mx-auto px-8">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-12 mb-20">
+<div class="col-span-2 md:col-span-1">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary-fixed text-2xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-xl font-black">Smart Inventory</span>
+</div>
+<p class="text-white/50 text-sm leading-relaxed mb-6">The next generation of inventory management powered by specialized AI agents and real-time OCR.</p>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-primary-fixed">Product</h4>
+<ul class="space-y-4 text-sm text-white/60">
+<li><a class="hover:text-white transition-colors" href="#">Features</a></li>
+<li><a class="hover:text-white transition-colors" href="#">API Docs</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Integrations</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Pricing</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-primary-fixed">Resources</h4>
+<ul class="space-y-4 text-sm text-white/60">
+<li><a class="hover:text-white transition-colors" href="#">Help Center</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Community</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Blog</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Webinars</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-primary-fixed">Legal</h4>
+<ul class="space-y-4 text-sm text-white/60">
+<li><a class="hover:text-white transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Terms of Service</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Security</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Status</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
+<p class="text-xs text-white/40">© 2024 Smart Inventory AI. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="text-white/40 hover:text-white transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="text-white/40 hover:text-white transition-colors" href="#"><span class="material-symbols-outlined">alternate_email</span></a>
+<a class="text-white/40 hover:text-white transition-colors" href="#"><span class="material-symbols-outlined">groups</span></a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

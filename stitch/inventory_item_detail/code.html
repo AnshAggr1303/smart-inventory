@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Paneer | Smart Inventory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;family=Inter+Tight:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-highest": "#e3e3d9",
+              "inverse-primary": "#c0c1ff",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-on-surface": "#f2f1e7",
+              "outline-variant": "#c6c4d9",
+              "secondary": "#5356a8",
+              "secondary-container": "#a3a6fe",
+              "surface-container-low": "#f5f4ea",
+              "on-primary": "#ffffff",
+              "surface-bright": "#fafaef",
+              "primary-fixed-dim": "#c0c1ff",
+              "primary": "#1e0cde",
+              "surface-container": "#efeee4",
+              "surface-tint": "#403ff6",
+              "tertiary-fixed-dim": "#ffb95f",
+              "secondary-fixed": "#e1e0ff",
+              "inverse-surface": "#30312a",
+              "surface-dim": "#dbdbd0",
+              "on-secondary-fixed-variant": "#3b3d8e",
+              "surface-container-high": "#e9e9de",
+              "background": "#fafaef",
+              "on-primary-fixed-variant": "#2215e0",
+              "error-container": "#ffdad6",
+              "surface": "#fafaef",
+              "on-error-container": "#93000a",
+              "secondary-fixed-dim": "#c0c1ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-background": "#1b1c16",
+              "tertiary-fixed": "#ffddb8",
+              "on-secondary-container": "#363788",
+              "on-tertiary-container": "#ffcb8f",
+              "primary-container": "#3d3bf3",
+              "outline": "#767588",
+              "tertiary-container": "#825100",
+              "surface-container-lowest": "#ffffff",
+              "tertiary": "#623c00",
+              "error": "#ba1a1a",
+              "on-secondary-fixed": "#0b0763",
+              "primary-fixed": "#e1e0ff",
+              "on-surface-variant": "#454556",
+              "surface-variant": "#e3e3d9",
+              "on-primary-container": "#d1d0ff",
+              "on-surface": "#1b1c16",
+              "on-secondary": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed": "#07006c"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"],
+              "mono": ["Inter Tight", "monospace"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      body { font-family: 'Inter', sans-serif; background-color: #FAFAEF; color: #1B1C16; }
+      .mono { font-family: 'Inter Tight', monospace; letter-spacing: -0.02em; }
+      .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+      .glass-effect { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); }
+      .ambient-shadow { box-shadow: 0 12px 32px -4px rgba(27, 28, 22, 0.06); }
+      .ghost-border { outline: 1px solid rgba(198, 196, 217, 0.15); }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar Component -->
+<aside class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-[#F5F4EA] flex flex-col p-4 space-y-2 z-40">
+<div class="flex flex-col mb-8 px-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-lg">smart_toy</span>
+</div>
+<span class="text-lg font-bold text-[#1B1C16]">Smart Inventory</span>
+</div>
+<span class="text-xs text-on-surface-variant/70 mt-1 uppercase tracking-wider font-semibold">AI-Powered Management</span>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-[#1B1C16]/60 hover:bg-[#FAFAEF] rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-[#FFFFFF] text-[#3D3BF3] rounded-lg shadow-sm font-semibold scale-[0.98] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#1B1C16]/60 hover:bg-[#FAFAEF] rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="text-sm font-medium">Bill Scanner</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#1B1C16]/60 hover:bg-[#FAFAEF] rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="text-sm font-medium">Recipes</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#1B1C16]/60 hover:bg-[#FAFAEF] rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="smart_toy">smart_toy</span>
+<span class="text-sm font-medium">Agents</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#1B1C16]/60 hover:bg-[#FAFAEF] rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="text-sm font-medium">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#1B1C16]/60 hover:bg-[#FAFAEF] rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="text-sm font-medium">Suppliers</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#1B1C16]/60 hover:bg-[#FAFAEF] rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 flex flex-col gap-2">
+<button class="w-full bg-primary-container text-white py-3 rounded-lg font-bold flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                Scan Bill
+            </button>
+<div class="border-t border-outline-variant/20 my-2"></div>
+<a class="flex items-center gap-3 px-4 py-2 text-[#1B1C16]/60 hover:bg-[#FAFAEF] rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="text-sm font-medium">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-[#1B1C16]/60 hover:bg-[#FAFAEF] rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="text-sm font-medium">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 flex-1 p-8">
+<!-- Top Navigation Area (Floating Logic) -->
+<header class="flex justify-between items-center mb-10">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex items-baseline gap-4">
+<h1 class="text-[28px] font-bold tracking-tight">Paneer</h1>
+<span class="bg-surface-container-high px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant">Dairy &amp; Fresh</span>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">warning</span>
+                        Low Stock
+                    </span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-5 py-2.5 rounded-xl bg-surface-container-lowest ghost-border font-medium flex items-center gap-2 hover:bg-surface-container-low transition-all active:scale-95">
+<span class="material-symbols-outlined text-xl">edit</span>
+                    Edit Item
+                </button>
+<button class="px-5 py-2.5 rounded-xl bg-surface-container-lowest ghost-border font-medium flex items-center gap-2 hover:text-error transition-all active:scale-95">
+<span class="material-symbols-outlined text-xl">archive</span>
+                    Archive
+                </button>
+</div>
+</header>
+<!-- Metric Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="bg-surface-container-lowest p-6 rounded-xl ambient-shadow ghost-border">
+<p class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant/70 mb-2">Current Stock</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl mono font-bold text-primary">340</span>
+<span class="text-on-surface-variant font-medium">g</span>
+</div>
+<div class="mt-4 flex items-center gap-2 text-xs text-error font-medium">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+                    12% from last week
+                </div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl ghost-border">
+<p class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant/70 mb-2">Reorder Point</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl mono font-bold text-on-surface-variant/40">500</span>
+<span class="text-on-surface-variant/40 font-medium">g</span>
+</div>
+<p class="mt-4 text-xs text-on-surface-variant/60 font-medium">Automatic alert enabled</p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl ghost-border">
+<p class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant/70 mb-2">Avg Daily Use</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl mono font-bold text-on-surface-variant/40">220</span>
+<span class="text-on-surface-variant/40 font-medium">g/day</span>
+</div>
+<p class="mt-4 text-xs text-on-surface-variant/60 font-medium italic">Based on last 14 days</p>
+</div>
+</div>
+<!-- Details & Content Section -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+<!-- Details Left Col -->
+<div class="bg-surface-container-low p-8 rounded-xl space-y-6">
+<h3 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-2">Specifications</h3>
+<div class="grid grid-cols-2 gap-y-6">
+<div>
+<p class="text-xs text-on-surface-variant/60 mb-1">Standard Unit</p>
+<p class="font-medium">Gram (g)</p>
+</div>
+<div>
+<p class="text-xs text-on-surface-variant/60 mb-1">Category</p>
+<p class="font-medium text-primary">Perishables</p>
+</div>
+<div>
+<p class="text-xs text-on-surface-variant/60 mb-1">Supplier</p>
+<p class="font-medium">Green Valley Organics</p>
+</div>
+<div>
+<p class="text-xs text-on-surface-variant/60 mb-1">Last Restocked</p>
+<p class="font-medium mono text-sm">24 Oct, 2024</p>
+</div>
+<div>
+<p class="text-xs text-on-surface-variant/60 mb-1">Expiry Date</p>
+<p class="font-medium text-error flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">event_busy</span>
+                            08 Nov, 2024
+                        </p>
+</div>
+</div>
+</div>
+<!-- Details Right Col -->
+<div class="bg-surface-container-low p-8 rounded-xl space-y-6">
+<h3 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-2">Financials &amp; Usage</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-sm text-on-surface-variant/70">Cost per unit</span>
+<span class="mono font-bold">₹ 0.45 / g</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/10">
+<span class="text-sm text-on-surface-variant/70">Total value in stock</span>
+<span class="mono font-bold text-primary">₹ 153.00</span>
+</div>
+<div class="flex flex-col gap-3 py-2">
+<span class="text-sm text-on-surface-variant/70">Used in Recipes</span>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-lowest px-3 py-1.5 rounded-lg text-xs font-medium ghost-border">Palak Paneer</span>
+<span class="bg-surface-container-lowest px-3 py-1.5 rounded-lg text-xs font-medium ghost-border">Mutter Paneer</span>
+<span class="bg-surface-container-lowest px-3 py-1.5 rounded-lg text-xs font-medium ghost-border">Paneer Tikka</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Stock History Chart (Visual Placeholder) -->
+<div class="bg-surface-container-lowest p-8 rounded-xl ghost-border mb-8">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h3 class="font-bold text-lg mb-1">Stock Level History</h3>
+<p class="text-sm text-on-surface-variant/60">Last 30 days trends and depletion rate</p>
+</div>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="text-xs font-medium">Actual Stock</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-[2px] bg-error border-t-2 border-dashed border-error"></span>
+<span class="text-xs font-medium">Reorder Point (500g)</span>
+</div>
+</div>
+</div>
+<div class="relative h-64 w-full">
+<!-- SVG Chart Mockup -->
+<svg class="w-full h-full preserve-3d" viewbox="0 0 1000 300">
+<!-- Amber Shaded Zone (Below 500g threshold) -->
+<rect fill="#FFDDB8" fill-opacity="0.15" height="150" width="1000" x="0" y="150"></rect>
+<!-- Horizontal Reorder Point (500g line) -->
+<line stroke="#BA1A1A" stroke-dasharray="8,4" stroke-width="2" x1="0" x2="1000" y1="150" y2="150"></line>
+<!-- Indigo Trend Line -->
+<path d="M0,50 L100,60 L200,40 L300,120 L400,220 L500,190 L600,240 L700,210 L800,250 L900,230 L1000,270" fill="none" stroke="#1E0CDE" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+<!-- Data Points -->
+<circle cx="1000" cy="270" fill="#1E0CDE" r="4"></circle>
+<!-- Axes Mockup -->
+<line stroke="#C6C4D9" stroke-opacity="0.2" x1="0" x2="1000" y1="290" y2="290"></line>
+</svg>
+<div class="flex justify-between mt-4 text-[10px] uppercase font-bold text-on-surface-variant/40 tracking-widest">
+<span>Oct 05</span>
+<span>Oct 12</span>
+<span>Oct 19</span>
+<span>Oct 26</span>
+<span>Today</span>
+</div>
+</div>
+</div>
+<!-- Transaction History Table -->
+<div class="bg-surface-container-lowest rounded-xl ghost-border overflow-hidden">
+<div class="p-6 border-b border-outline-variant/10 flex justify-between items-center">
+<h3 class="font-bold text-lg">All movements</h3>
+<div class="flex p-1 bg-surface-container-low rounded-xl">
+<button class="px-4 py-1.5 rounded-lg text-xs font-bold bg-surface-container-lowest shadow-sm text-primary">All</button>
+<button class="px-4 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant/60 hover:text-on-surface transition-colors">Additions</button>
+<button class="px-4 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant/60 hover:text-on-surface transition-colors">Deductions</button>
+<button class="px-4 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant/60 hover:text-on-surface transition-colors">Adjustments</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low/50">
+<tr>
+<th class="px-6 py-4 text-[10px] uppercase tracking-widest font-bold text-on-surface-variant/60">Date</th>
+<th class="px-6 py-4 text-[10px] uppercase tracking-widest font-bold text-on-surface-variant/60">Type</th>
+<th class="px-6 py-4 text-[10px] uppercase tracking-widest font-bold text-on-surface-variant/60">Qty</th>
+<th class="px-6 py-4 text-[10px] uppercase tracking-widest font-bold text-on-surface-variant/60">Source / Purpose</th>
+<th class="px-6 py-4 text-[10px] uppercase tracking-widest font-bold text-on-surface-variant/60 text-right">Balance After</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<tr class="hover:bg-surface-container-low/30 transition-colors group border-l-4 border-error">
+<td class="px-6 py-5 mono text-xs">Nov 04, 11:30 AM</td>
+<td class="px-6 py-5">
+<span class="bg-error-container text-on-error-container px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-tighter">Deduction</span>
+</td>
+<td class="px-6 py-5 mono font-bold text-error">-200 g</td>
+<td class="px-6 py-5 text-sm">Order #842 (Palak Paneer)</td>
+<td class="px-6 py-5 mono text-right font-medium">340 g</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group border-l-4 border-error">
+<td class="px-6 py-5 mono text-xs">Nov 03, 08:15 PM</td>
+<td class="px-6 py-5">
+<span class="bg-error-container text-on-error-container px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-tighter">Deduction</span>
+</td>
+<td class="px-6 py-5 mono font-bold text-error">-150 g</td>
+<td class="px-6 py-5 text-sm">Order #831 (Mutter Paneer)</td>
+<td class="px-6 py-5 mono text-right font-medium">540 g</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group border-l-4 border-primary">
+<td class="px-6 py-5 mono text-xs">Nov 01, 10:00 AM</td>
+<td class="px-6 py-5">
+<span class="bg-primary-fixed text-on-primary-fixed px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-tighter">Addition</span>
+</td>
+<td class="px-6 py-5 mono font-bold text-primary">+5,000 g</td>
+<td class="px-6 py-5 text-sm">PO #992 (Green Valley)</td>
+<td class="px-6 py-5 mono text-right font-medium">690 g</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group border-l-4 border-tertiary-fixed">
+<td class="px-6 py-5 mono text-xs">Oct 30, 04:45 PM</td>
+<td class="px-6 py-5">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-tighter">Adjustment</span>
+</td>
+<td class="px-6 py-5 mono font-bold text-on-surface-variant">-10 g</td>
+<td class="px-6 py-5 text-sm">Waste / Spoilage Reporting</td>
+<td class="px-6 py-5 mono text-right font-medium">1,210 g</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 bg-surface-container-low/30 flex justify-center">
+<button class="text-xs font-bold text-primary uppercase tracking-widest hover:underline">View Full History</button>
+</div>
+</div>
+</main>
+<!-- Global Footer Component -->
+<footer class="fixed bottom-0 left-64 right-0 bg-[#FAFAEF]/95 backdrop-blur-md border-t border-[#C6C4D9]/15 z-50">
+<div class="max-w-7xl mx-auto px-8 py-4 flex flex-col md:flex-row justify-between items-center">
+<div class="flex items-center gap-4">
+<span class="text-sm font-bold text-[#1B1C16]">Smart Inventory AI</span>
+<span class="text-xs text-[#1B1C16]/50">© 2024 All rights reserved.</span>
+</div>
+<div class="flex gap-6 mt-4 md:mt-0">
+<a class="text-xs text-[#1B1C16]/50 hover:text-[#3D3BF3] transition-colors" href="#">Privacy Policy</a>
+<a class="text-xs text-[#1B1C16]/50 hover:text-[#3D3BF3] transition-colors" href="#">Terms of Service</a>
+<a class="text-xs text-[#1B1C16]/50 hover:text-[#3D3BF3] transition-colors" href="#">Security</a>
+<a class="text-xs text-[#1B1C16]/50 hover:text-[#3D3BF3] transition-colors" href="#">Status</a>
+</div>
+</div>
+</footer>
+</body></html>

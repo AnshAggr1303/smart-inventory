@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Analytics | Smart Inventory</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;family=Inter+Mono:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-highest": "#e3e3d9",
+              "inverse-primary": "#c0c1ff",
+              "on-error": "#ffffff",
+              "on-tertiary-fixed": "#2a1700",
+              "inverse-on-surface": "#f2f1e7",
+              "outline-variant": "#c6c4d9",
+              "secondary": "#5356a8",
+              "secondary-container": "#a3a6fe",
+              "surface-container-low": "#f5f4ea",
+              "on-primary": "#ffffff",
+              "surface-bright": "#fafaef",
+              "primary-fixed-dim": "#c0c1ff",
+              "primary": "#1e0cde",
+              "surface-container": "#efeee4",
+              "surface-tint": "#403ff6",
+              "tertiary-fixed-dim": "#ffb95f",
+              "secondary-fixed": "#e1e0ff",
+              "inverse-surface": "#30312a",
+              "surface-dim": "#dbdbd0",
+              "on-secondary-fixed-variant": "#3b3d8e",
+              "surface-container-high": "#e9e9de",
+              "background": "#fafaef",
+              "on-primary-fixed-variant": "#2215e0",
+              "error-container": "#ffdad6",
+              "surface": "#fafaef",
+              "on-error-container": "#93000a",
+              "secondary-fixed-dim": "#c0c1ff",
+              "on-tertiary-fixed-variant": "#653e00",
+              "on-background": "#1b1c16",
+              "tertiary-fixed": "#ffddb8",
+              "on-secondary-container": "#363788",
+              "on-tertiary-container": "#ffcb8f",
+              "primary-container": "#3d3bf3",
+              "outline": "#767588",
+              "tertiary-container": "#825100",
+              "surface-container-lowest": "#ffffff",
+              "tertiary": "#623c00",
+              "error": "#ba1a1a",
+              "on-secondary-fixed": "#0b0763",
+              "primary-fixed": "#e1e0ff",
+              "on-surface-variant": "#454556",
+              "surface-variant": "#e3e3d9",
+              "on-primary-container": "#d1d0ff",
+              "on-surface": "#1b1c16",
+              "on-secondary": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed": "#07006c"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"],
+              "mono": ["Inter Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      body { font-family: 'Inter', sans-serif; }
+      .mono { font-family: 'Inter Mono', monospace; }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      /* Custom Glassmorphism */
+      .glass {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+      }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- SideNavBar Anchor -->
+<aside class="h-screen w-60 fixed left-0 top-0 overflow-y-auto bg-surface-container-low flex flex-col p-4 space-y-2 z-40">
+<div class="flex items-center gap-3 px-2 py-4 mb-4">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-lg" data-icon="inventory_2">inventory_2</span>
+</div>
+<div>
+<h2 class="text-lg font-bold text-on-surface leading-tight">Smart Inventory</h2>
+<p class="text-[10px] uppercase tracking-wider font-semibold opacity-60">AI-Powered Management</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:bg-surface-bright rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:bg-surface-bright rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:bg-surface-bright rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="text-sm font-medium">Bill Scanner</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:bg-surface-bright rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="text-sm font-medium">Recipes</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:bg-surface-bright rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="smart_toy">smart_toy</span>
+<span class="text-sm font-medium">Agents</span>
+</a>
+<!-- Active State: Analytics -->
+<a class="flex items-center gap-3 px-4 py-3 bg-surface-container-lowest text-primary-container rounded-lg shadow-sm font-semibold scale-[0.98] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span class="text-sm font-medium">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:bg-surface-bright rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="text-sm font-medium">Suppliers</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:bg-surface-bright rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="pt-4 border-t border-outline-variant/15 space-y-1">
+<button class="w-full bg-primary-container text-on-primary py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 mb-4">
+<span class="material-symbols-outlined text-sm" data-icon="receipt_long">receipt_long</span>
+                Scan Bill
+            </button>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="text-sm font-medium">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface/60 hover:text-error transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="text-sm font-medium">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-60 min-h-screen">
+<!-- TopAppBar Header -->
+<header class="sticky top-0 z-30 bg-surface/80 backdrop-blur-md px-8 py-6 flex justify-between items-center">
+<div>
+<h1 class="text-3xl font-bold tracking-tight text-on-surface">Analytics</h1>
+<p class="text-sm text-on-surface-variant">Performance insights for your restaurant's inventory.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center bg-surface-container-lowest px-4 py-2 rounded-xl shadow-sm border border-outline-variant/15">
+<span class="material-symbols-outlined text-sm mr-2 opacity-60" data-icon="calendar_today">calendar_today</span>
+<span class="text-sm font-medium">Last 30 days</span>
+<span class="material-symbols-outlined text-sm ml-2 opacity-60" data-icon="expand_more">expand_more</span>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 text-primary border border-primary/20 bg-primary/5 hover:bg-primary/10 rounded-xl font-semibold transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="file_download">file_download</span>
+                    Export PDF
+                </button>
+<div class="ml-2 w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/15 overflow-hidden">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="professional portrait of a man in business attire, clean background, soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6toykKNRWAdu2e3RAW6Nv707AgIQsOjOQ5Q7vnd3gel4Eo7nOlv1_Igm_9vWueN4RCiT94okuncXX_qlOOQIepV_S3awNH7XH19DVZMJrsyttwX6brBiiWH3EjNXRvIBsGuemIHBNoO0PHmzUZOl7MlvDVvLsB0-HdyrTJ2EhCjlC0RtPU6Rr06LqasCEIxl8JeCUWpOCG1Cb6i6XRtwKsHNt7dYG_A0aH7xqfnYItlUHViJEYxqN-eqB29maiuZRlXDJz4V1UA"/>
+</div>
+</div>
+</header>
+<div class="px-8 pb-12 space-y-8 max-w-7xl">
+<!-- SECTION 1: Stock Flow Cards -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Total Purchased -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/15 shadow-sm hover:translate-y-[-2px] transition-transform">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-primary/10 text-primary rounded-lg">
+<span class="material-symbols-outlined text-xl" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<span class="text-[10px] uppercase font-bold text-tertiary tracking-widest">+12%</span>
+</div>
+<p class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant mb-1">Total Purchased</p>
+<h3 class="text-2xl font-bold mono">₹48,200</h3>
+</div>
+<!-- Total Consumed -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/15 shadow-sm hover:translate-y-[-2px] transition-transform">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-secondary/10 text-secondary rounded-lg">
+<span class="material-symbols-outlined text-xl" data-icon="restaurant">restaurant</span>
+</div>
+<span class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest">Normal</span>
+</div>
+<p class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant mb-1">Consumed (Recipes)</p>
+<h3 class="text-2xl font-bold mono">₹39,100</h3>
+</div>
+<!-- Waste / Shrinkage -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/15 shadow-sm hover:translate-y-[-2px] transition-transform">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-error/10 text-error rounded-lg">
+<span class="material-symbols-outlined text-xl" data-icon="delete_outline">delete_outline</span>
+</div>
+<span class="text-[10px] uppercase font-bold text-error tracking-widest">-4%</span>
+</div>
+<p class="text-[10px] uppercase tracking-wider font-semibold text-on-surface-variant mb-1">Waste / Shrinkage</p>
+<h3 class="text-2xl font-bold mono">₹2,300</h3>
+</div>
+<!-- Net Stock Value -->
+<div class="bg-primary-container p-6 rounded-xl shadow-lg hover:translate-y-[-2px] transition-transform">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-white/20 text-white rounded-lg">
+<span class="material-symbols-outlined text-xl" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<span class="material-symbols-outlined text-white/60" data-icon="info">info</span>
+</div>
+<p class="text-[10px] uppercase tracking-wider font-semibold text-white/80 mb-1">Net Stock Value</p>
+<h3 class="text-2xl font-bold mono text-white">₹6,800</h3>
+</div>
+</section>
+<!-- SECTION 2: Charts (Bento Layout) -->
+<section class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+<!-- Top Consumed Items (Indigo Horizontal Bars) -->
+<div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl border border-outline-variant/15 shadow-sm">
+<div class="flex items-center justify-between mb-8">
+<h4 class="text-sm font-bold uppercase tracking-wider">Top Consumed Items</h4>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="more_vert">more_vert</span>
+</div>
+<div class="space-y-6">
+<!-- Bar Item -->
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-semibold">
+<span>Paneer</span>
+<span class="mono">₹12.4k</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 85%;"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-semibold">
+<span>Maida</span>
+<span class="mono">₹8.1k</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary-container/80 rounded-full" style="width: 65%;"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-semibold">
+<span>Tomato</span>
+<span class="mono">₹5.2k</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary-container/60 rounded-full" style="width: 45%;"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-semibold">
+<span>Oil</span>
+<span class="mono">₹4.8k</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary-container/40 rounded-full" style="width: 40%;"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-semibold">
+<span>Rice</span>
+<span class="mono">₹3.9k</span>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary-container/20 rounded-full" style="width: 30%;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Stock Level Trends (Visual Placeholder for Multi-line Chart) -->
+<div class="lg:col-span-3 bg-surface-container-lowest p-8 rounded-xl border border-outline-variant/15 shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h4 class="text-sm font-bold uppercase tracking-wider">Stock Level Trends</h4>
+<p class="text-xs text-on-surface-variant">Inventory movement over 30 days</p>
+</div>
+<div class="flex gap-4">
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="text-[10px] font-semibold">Perishables</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-[10px] font-semibold">Dry Goods</span>
+</div>
+</div>
+</div>
+<!-- Decorative Chart SVG -->
+<div class="h-48 w-full mt-4">
+<svg class="w-full h-full overflow-visible" viewbox="0 0 400 100">
+<!-- Grid lines -->
+<line class="text-outline-variant/10" stroke="currentColor" stroke-width="0.5" x1="0" x2="400" y1="20" y2="20"></line>
+<line class="text-outline-variant/10" stroke="currentColor" stroke-width="0.5" x1="0" x2="400" y1="50" y2="50"></line>
+<line class="text-outline-variant/10" stroke="currentColor" stroke-width="0.5" x1="0" x2="400" y1="80" y2="80"></line>
+<!-- Line 1: Perishables -->
+<path d="M0,80 Q50,20 100,50 T200,30 T300,70 T400,20" fill="none" stroke="#1e0cde" stroke-linecap="round" stroke-width="2.5"></path>
+<!-- Line 2: Dry Goods -->
+<path d="M0,60 Q60,80 120,40 T240,60 T360,30 T400,50" fill="none" stroke="#623c00" stroke-dasharray="4 2" stroke-linecap="round" stroke-width="2.5"></path>
+</svg>
+</div>
+<!-- Chart Legend/Labels -->
+<div class="flex justify-between mt-6 px-2 text-[10px] font-medium text-on-surface-variant opacity-60">
+<span>1 Nov</span>
+<span>8 Nov</span>
+<span>15 Nov</span>
+<span>22 Nov</span>
+<span>30 Nov</span>
+</div>
+</div>
+</section>
+<!-- SECTION 3: Tables Container -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+<!-- Supplier Spend Table -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<h4 class="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="local_shipping">local_shipping</span>
+                            Supplier Spend
+                        </h4>
+<a class="text-xs font-semibold text-primary hover:underline" href="#">View all</a>
+</div>
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/15 shadow-sm overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-6 py-4 text-[10px] uppercase font-bold text-on-surface-variant">Supplier</th>
+<th class="px-6 py-4 text-[10px] uppercase font-bold text-on-surface-variant">Items</th>
+<th class="px-6 py-4 text-[10px] uppercase font-bold text-on-surface-variant">Spend</th>
+<th class="px-6 py-4 text-[10px] uppercase font-bold text-on-surface-variant">Trend</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold">Ram Dairy</span>
+<span class="text-[10px] opacity-60">Last: 2 days ago</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium">Milk, Paneer, Curd</td>
+<td class="px-6 py-4 text-sm font-bold mono">₹18,400</td>
+<td class="px-6 py-4">
+<span class="material-symbols-outlined text-error text-lg" data-icon="trending_up">trending_up</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold">Aggarwal Traders</span>
+<span class="text-[10px] opacity-60">Last: 1 week ago</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium">Flour, Rice, Oil</td>
+<td class="px-6 py-4 text-sm font-bold mono">₹22,150</td>
+<td class="px-6 py-4">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="trending_flat">trending_flat</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-sm font-bold">City Pharma</span>
+<span class="text-[10px] opacity-60">Last: 5 days ago</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm font-medium">Sanitizers, Soap</td>
+<td class="px-6 py-4 text-sm font-bold mono">₹7,650</td>
+<td class="px-6 py-4">
+<span class="material-symbols-outlined text-secondary text-lg" data-icon="trending_down">trending_down</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Recipe Cost Analysis -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<h4 class="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="calculate">calculate</span>
+                            Recipe COGS Analysis
+                        </h4>
+<div class="p-1 bg-surface-container-low rounded-lg flex">
+<span class="material-symbols-outlined text-sm p-1 cursor-pointer" data-icon="search">search</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/15 shadow-sm overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-6 py-4 text-[10px] uppercase font-bold text-on-surface-variant">Recipe</th>
+<th class="px-6 py-4 text-[10px] uppercase font-bold text-on-surface-variant">Unit Cost</th>
+<th class="px-6 py-4 text-[10px] uppercase font-bold text-on-surface-variant">Qty</th>
+<th class="px-6 py-4 text-[10px] uppercase font-bold text-on-surface-variant">Margin</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Veg Roll" class="w-full h-full object-cover" data-alt="close up of a vegetarian spring roll with dipping sauce on a wooden plate" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWY-DLT6rKWLJ84hpLKlAvBZUGWr8LNfdO1ZuyoOcBUInaeMPDZPjtVtkz7ysMlKcX-kYHBwndt98r4lWJhlJQ4q_B_9QcvnY7v3sUd1NY10XCm9lxxyRODULzlBCQ8r3FZ8Qr8zuYCZcilI_D4FA_U70v4p7dpUKRPsS4mHnmYN5MeMfqM18yA4JkRvHDc7LDKRuieWEuMKME6iUem3qig2bXXaU92C17YUucX9Ctwmosoz0_O3QGe0c-pkqIWcA4LCB06d6kNg"/>
+</div>
+<span class="text-sm font-bold">Veg Roll</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm mono">₹18.40</td>
+<td class="px-6 py-4 text-sm mono font-semibold">340</td>
+<td class="px-6 py-4">
+<div class="px-2 py-1 bg-secondary-container/20 text-on-secondary-container rounded-lg text-[10px] font-black text-center inline-block">69%</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Butter Paneer" class="w-full h-full object-cover" data-alt="bowl of rich orange butter paneer curry with cilantro garnish and naan bread" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJkGzTqOkOi38LzFAkueMtmxfX04vX1qfiqGc6iFj_mlNhvQiYUYLUz-Gk2rAtHz0c5OlEDNX47gMN8aQ0_kVrxYsl7MXv7u9p8_mn-dPCGRi2ZFfPL1DcOKI6tLb2yfwjj4RHFWDTg9P6NEx7emU5tm2DNQhnCZG4y3pWX2NZKp5yTaFOWOMzpsEFToZcv2oUcce4neOCShKfdaw9yHN7p-WDGN038NbIVjAG6NLvcTz4XxuUXaUCgb7jcgQ5TJEvgEkt9eqBeQ"/>
+</div>
+<span class="text-sm font-bold">Butter Paneer</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm mono">₹84.20</td>
+<td class="px-6 py-4 text-sm mono font-semibold">112</td>
+<td class="px-6 py-4">
+<div class="px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed rounded-lg text-[10px] font-black text-center inline-block">53%</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Footer Anchor -->
+<footer class="pt-12 mt-12 border-t border-outline-variant/15 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex items-center gap-4">
+<span class="text-sm font-bold text-on-surface">Smart Inventory AI</span>
+<span class="text-xs text-on-surface-variant opacity-50">© 2024. All rights reserved.</span>
+</div>
+<div class="flex gap-6">
+<a class="text-xs text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-xs text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-xs text-on-surface-variant hover:text-primary transition-colors" href="#">Security</a>
+<a class="text-xs text-on-surface-variant hover:text-primary transition-colors" href="#">Status</a>
+</div>
+</footer>
+</div>
+</main>
+</body></html>

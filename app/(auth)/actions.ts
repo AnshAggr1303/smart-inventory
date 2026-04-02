@@ -35,6 +35,14 @@ export async function signUpAction(
     confirm_password: formData.get('confirm_password'),
   }
 
+  // Temporary debug — logs booleans only, never values (Rule S4)
+  console.log('[signUpAction] fields received:', {
+    hasName: !!raw.full_name,
+    hasEmail: !!raw.email,
+    hasPassword: !!raw.password,
+    hasConfirm: !!raw.confirm_password,
+  })
+
   const result = SignUpSchema.safeParse(raw)
   if (!result.success) {
     return { error: result.error.issues[0]?.message ?? 'Validation failed' }
