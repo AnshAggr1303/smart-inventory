@@ -35,14 +35,6 @@ export async function signUpAction(
     confirm_password: formData.get('confirm_password'),
   }
 
-  // Temporary debug — logs booleans only, never values (Rule S4)
-  console.log('[signUpAction] fields received:', {
-    hasName: !!raw.full_name,
-    hasEmail: !!raw.email,
-    hasPassword: !!raw.password,
-    hasConfirm: !!raw.confirm_password,
-  })
-
   const result = SignUpSchema.safeParse(raw)
   if (!result.success) {
     return { error: result.error.issues[0]?.message ?? 'Validation failed' }
@@ -51,28 +43,34 @@ export async function signUpAction(
   const { full_name, email, password } = result.data
   const supabase = await createServerClient()
 
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: { data: { full_name } },
-  })
+  let signUpError: string | null = null
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { full_name } },
+    })
 
-  if (error) {
-    // Cover all Supabase error variants for "email already exists"
-    const msg = error.message.toLowerCase()
-    if (
-      msg.includes('already registered') ||
-      msg.includes('already in use') ||
-      msg.includes('already exists') ||
-      error.code === 'email_address_already_used'
-    ) {
-      return {
-        error:
-          'An account with this email already exists. Log in instead?',
+    if (error) {
+      const msg = error.message.toLowerCase()
+      if (
+        msg.includes('already registered') ||
+        msg.includes('already in use') ||
+        msg.includes('already exists') ||
+        error.code === 'email_address_already_used'
+      ) {
+        signUpError = 'An account with this email already exists. Log in instead?'
+      } else {
+        signUpError = 'Sign up failed. Please try again.'
       }
+    } else if (!data.user) {
+      signUpError = 'Sign up failed. Please try again.'
     }
-    return { error: 'Sign up failed. Please try again.' }
+  } catch {
+    return { error: 'Something went wrong. Try again.' }
   }
+
+  if (signUpError) return { error: signUpError }
 
   redirect('/onboarding/step-2')
 }

@@ -34,13 +34,25 @@ export async function createOrgAction(
 ): Promise<OnboardingState> {
   const supabase = await createServerClient()
 
+  // getSession() loads the JWT into the client's internal state so that
+  // auth.uid() resolves correctly in PostgREST RLS checks.
   const {
-    data: { user },
-  } = await supabase.auth.getUser()
+    data: { session },
+  } = await supabase.auth.getSession()
 
-  if (!user) {
+  if (!session) {
     return { error: 'Your session has expired. Please log in again.' }
   }
+
+  // Explicitly set the session so PostgREST requests include the JWT.
+  // @supabase/ssr does not automatically attach the token to DB requests
+  // in Server Actions even when getSession() returns a valid session.
+  await supabase.auth.setSession({
+    access_token: session.access_token,
+    refresh_token: session.refresh_token,
+  })
+
+  const user = session.user
 
   const raw = {
     business_name: formData.get('business_name'),
@@ -55,27 +67,34 @@ export async function createOrgAction(
 
   const { business_name, industry, city } = result.data
 
-  const { data: org, error: orgError } = await supabase
-    .from('organisations')
-    .insert({ name: business_name, industry, city: city ?? null })
-    .select('id')
-    .single()
+  let actionError: string | null = null
+  try {
+    const { data: org, error: orgError } = await supabase
+      .from('organisations')
+      .insert({ name: business_name, industry, city: city ?? null })
+      .select('id')
+      .single()
 
-  if (orgError || !org) {
-    return { error: 'Failed to create your organisation. Please try again.' }
+    if (orgError || !org) {
+      actionError = 'Failed to create your organisation. Please try again.'
+    } else {
+      const { error: profileError } = await supabase
+        .from('user_profiles')
+        .update({ org_id: org.id })
+        .eq('id', user.id)
+
+      if (profileError) {
+        actionError = 'Failed to save your profile. Please try again.'
+      } else {
+        // Seed industry templates — failure must not block onboarding
+        await seedIndustryTemplates(org.id, industry as Industry)
+      }
+    }
+  } catch {
+    return { error: 'Something went wrong. Try again.' }
   }
 
-  const { error: profileError } = await supabase
-    .from('user_profiles')
-    .update({ org_id: org.id })
-    .eq('id', user.id)
-
-  if (profileError) {
-    return { error: 'Failed to save your profile. Please try again.' }
-  }
-
-  // Seed industry templates — failure must not block onboarding (try/catch is inside seedIndustryTemplates)
-  await seedIndustryTemplates(org.id, industry as Industry)
+  if (actionError) return { error: actionError }
 
   redirect('/onboarding/step-3')
 }
@@ -125,40 +144,47 @@ export async function saveApiKeysAction(
   const encryptedGeminiKey =
     gemini_key && gemini_key.length > 0 ? encryptKey(gemini_key) : null
 
-  // Get org_id from DB (Rule S2 — never from client)
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('org_id')
-    .eq('id', user.id)
-    .single()
+  let actionError: string | null = null
+  try {
+    // Get org_id from DB (Rule S2 — never from client)
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('org_id')
+      .eq('id', user.id)
+      .single()
 
-  const org_id = profile?.org_id ?? null
+    const org_id = profile?.org_id ?? null
 
-  const { error: settingsError } = await supabase.from('user_settings').upsert(
-    {
-      user_id: user.id,
-      org_id,
-      groq_keys: JSON.stringify(encryptedGroqKeys),
-      groq_key_index: 0,
-      gemini_key: encryptedGeminiKey,
-    },
-    { onConflict: 'user_id' }
-  )
+    const { error: settingsError } = await supabase.from('user_settings').upsert(
+      {
+        user_id: user.id,
+        org_id,
+        groq_keys: JSON.stringify(encryptedGroqKeys),
+        groq_key_index: 0,
+        gemini_key: encryptedGeminiKey,
+      },
+      { onConflict: 'user_id' }
+    )
 
-  if (settingsError) {
-    return { error: 'Failed to save API keys. Please try again.' }
+    if (settingsError) {
+      actionError = 'Failed to save API keys. Please try again.'
+    } else {
+      const { error: profileError } = await supabase
+        .from('user_profiles')
+        .update({ onboarding_complete: true })
+        .eq('id', user.id)
+
+      if (profileError) {
+        actionError = 'Failed to complete setup. Please try again.'
+      }
+    }
+  } catch {
+    return { error: 'Something went wrong. Try again.' }
   }
 
-  const { error: profileError } = await supabase
-    .from('user_profiles')
-    .update({ onboarding_complete: true })
-    .eq('id', user.id)
+  if (actionError) return { error: actionError }
 
-  if (profileError) {
-    return { error: 'Failed to complete setup. Please try again.' }
-  }
-
-  redirect('/app/dashboard')
+  redirect('/dashboard')
 }
 
 // ─── Skip API keys ────────────────────────────────────────────────────────────
@@ -179,5 +205,5 @@ export async function skipApiKeysAction(): Promise<void> {
     .update({ onboarding_complete: true })
     .eq('id', user.id)
 
-  redirect('/app/dashboard')
+  redirect('/dashboard')
 }
