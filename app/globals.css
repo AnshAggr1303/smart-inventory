@@ -24,6 +24,18 @@
   /* ── Outline ──────────────────────────────────────────── */
   --color-outline-variant: #C6C4D9;
 
+  /* ── Error / semantic ─────────────────────────────────── */
+  --color-error: #BA1A1A;
+  --color-error-container: #FFDAD6;
+  --color-on-error-container: #93000A;
+  --color-on-tertiary-fixed: #2A1700;
+  --color-on-tertiary-fixed-variant: #653E00;
+
+  /* ── Secondary ────────────────────────────────────────── */
+  --color-secondary: #5356A8;
+  --color-secondary-fixed: #E1E0FF;
+  --color-on-secondary-container: #363788;
+
   /* ── Typography ───────────────────────────────────────── */
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-mono: 'Inter Mono', monospace;
