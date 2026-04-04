@@ -50,7 +50,7 @@ export const GROQ_MODEL_LARGE = 'llama3-70b-8192'
 export const GROQ_MODEL_FAST = 'llama3-8b-8192'
 
 /** Gemini model used for vision (bill scanning) and co-pilot chat */
-export const GEMINI_MODEL = 'gemini-1.5-flash'
+export const GEMINI_MODEL = 'gemini-2.0-flash'
 
 // ─── Expiry tracking ──────────────────────────────────────────────────────────
 
