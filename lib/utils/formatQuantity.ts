@@ -34,3 +34,17 @@ export function getStockColor(current: number, reorderPoint: number): string {
   }
   return 'text-on-surface'
 }
+
+/**
+ * Returns a semantic status string for stock level.
+ * Used for status pill rendering and filter logic.
+ */
+export function getStockStatus(
+  current: number,
+  reorderPoint: number
+): 'zero' | 'critical' | 'low' | 'in_stock' {
+  if (current <= 0) return 'zero'
+  if (reorderPoint > 0 && current <= reorderPoint * CRITICAL_STOCK_THRESHOLD) return 'critical'
+  if (reorderPoint > 0 && current <= reorderPoint) return 'low'
+  return 'in_stock'
+}
