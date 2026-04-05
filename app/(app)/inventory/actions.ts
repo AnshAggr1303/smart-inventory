@@ -95,8 +95,8 @@ export async function createItemAction(
     return { success: false, error: 'Failed to create item. Please try again.' }
   }
 
-  revalidatePath('/app/inventory')
-  revalidatePath('/app/dashboard')
+  revalidatePath('/inventory')
+  revalidatePath('/dashboard')
   return { success: true, id: data as string }
 }
 
@@ -148,9 +148,9 @@ export async function updateItemAction(
     return { success: false, error: 'Failed to update item. Please try again.' }
   }
 
-  revalidatePath('/app/inventory')
-  revalidatePath(`/app/inventory/${parsed.data.item_id}`)
-  revalidatePath('/app/dashboard')
+  revalidatePath('/inventory')
+  revalidatePath(`/inventory/${parsed.data.item_id}`)
+  revalidatePath('/dashboard')
   return { success: true }
 }
 
@@ -175,7 +175,7 @@ export async function archiveItemAction(
     return { success: false, error: 'Failed to archive item. Please try again.' }
   }
 
-  revalidatePath('/app/inventory')
-  revalidatePath('/app/dashboard')
+  revalidatePath('/inventory')
+  revalidatePath('/dashboard')
   return { success: true }
 }

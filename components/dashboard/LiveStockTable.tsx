@@ -84,7 +84,7 @@ export default function LiveStockTable({ initialItems, orgId }: LiveStockTablePr
                 className="hover:bg-surface-low/50 transition-colors"
               >
                 <td className="px-6 py-4 font-semibold text-body-md text-on-surface">
-                  <Link href={`/app/inventory/${item.id}`} className="hover:text-primary transition-colors">
+                  <Link href={`/inventory/${item.id}`} className="hover:text-primary transition-colors">
                     {item.name}
                   </Link>
                 </td>
@@ -106,7 +106,7 @@ export default function LiveStockTable({ initialItems, orgId }: LiveStockTablePr
                 </td>
                 <td className="px-6 py-4 text-right">
                   <Link
-                    href={`/app/inventory/${item.id}`}
+                    href={`/inventory/${item.id}`}
                     className="p-1.5 rounded-lg hover:bg-surface transition-colors text-on-surface-variant inline-flex"
                   >
                     <Edit className="w-4 h-4" />

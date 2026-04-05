@@ -79,18 +79,18 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       : 'Recipes'
 
   const navItems: NavItem[] = [
-    { href: '/app/dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
-    { href: '/app/inventory', label: 'Inventory', icon: <Package className="w-4 h-4" /> },
-    { href: '/app/scanner', label: 'Bill Scanner', icon: <Camera className="w-4 h-4" /> },
-    { href: '/app/recipes', label: recipeLabel, icon: <BookOpen className="w-4 h-4" /> },
-    { href: '/app/agents', label: 'Agents', icon: <Cpu className="w-4 h-4" /> },
-    { href: '/app/analytics', label: 'Analytics', icon: <BarChart2 className="w-4 h-4" /> },
-    { href: '/app/suppliers', label: 'Suppliers', icon: <Truck className="w-4 h-4" /> },
-    { href: '/app/settings', label: 'Settings', icon: <Settings className="w-4 h-4" /> },
+    { href: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { href: '/inventory', label: 'Inventory', icon: <Package className="w-4 h-4" /> },
+    { href: '/scanner', label: 'Bill Scanner', icon: <Camera className="w-4 h-4" /> },
+    { href: '/recipes', label: recipeLabel, icon: <BookOpen className="w-4 h-4" /> },
+    { href: '/agents', label: 'Agents', icon: <Cpu className="w-4 h-4" /> },
+    { href: '/analytics', label: 'Analytics', icon: <BarChart2 className="w-4 h-4" /> },
+    { href: '/suppliers', label: 'Suppliers', icon: <Truck className="w-4 h-4" /> },
+    { href: '/settings', label: 'Settings', icon: <Settings className="w-4 h-4" /> },
   ]
 
   function isActive(href: string): boolean {
-    if (href === '/app/dashboard') return pathname === href
+    if (href === '/dashboard') return pathname === href
     return pathname.startsWith(href)
   }
 

@@ -184,7 +184,7 @@ export default function InventoryClient({ items, totalCount }: InventoryClientPr
                             <Edit className="w-4 h-4" />
                           </button>
                           <Link
-                            href={`/app/inventory/${item.id}`}
+                            href={`/inventory/${item.id}`}
                             className="p-1.5 rounded-lg hover:bg-surface transition-colors text-on-surface-variant"
                             aria-label="View detail"
                           >

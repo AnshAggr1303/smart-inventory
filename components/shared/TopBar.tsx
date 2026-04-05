@@ -12,14 +12,14 @@ type TopBarProps = {
 }
 
 const PAGE_TITLES: Record<string, string> = {
-  '/app/dashboard': 'Dashboard',
-  '/app/inventory': 'Inventory',
-  '/app/scanner': 'Bill Scanner',
-  '/app/recipes': 'Recipes',
-  '/app/agents': 'Agents',
-  '/app/analytics': 'Analytics',
-  '/app/suppliers': 'Suppliers',
-  '/app/settings': 'Settings',
+  '/dashboard': 'Dashboard',
+  '/inventory': 'Inventory',
+  '/scanner': 'Bill Scanner',
+  '/recipes': 'Recipes',
+  '/agents': 'Agents',
+  '/analytics': 'Analytics',
+  '/suppliers': 'Suppliers',
+  '/settings': 'Settings',
 }
 
 function getPageTitle(pathname: string): string {
@@ -71,7 +71,7 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
           )}
         </button>
         <Link
-          href="/app/scanner"
+          href="/scanner"
           className="hidden md:flex items-center gap-2 px-4 py-2 gradient-primary text-on-primary rounded-lg text-body-md font-semibold hover:-translate-y-px transition-transform"
           style={{ boxShadow: '0 4px 12px rgba(30, 12, 222, 0.25)' }}
         >

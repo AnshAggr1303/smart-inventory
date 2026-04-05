@@ -128,7 +128,7 @@ export default async function DashboardPage() {
                   <span className="text-body-sm text-tertiary font-medium">
                     Only {formatQuantity(Number(item.current_stock), item.unit)} left
                   </span>
-                  <Link href="/app/agents" className="text-primary text-body-sm font-bold hover:underline">
+                  <Link href="/agents" className="text-primary text-body-sm font-bold hover:underline">
                     Reorder agent ready →
                   </Link>
                 </div>
@@ -142,7 +142,7 @@ export default async function DashboardPage() {
       <section className="bg-surface-lowest rounded-2xl overflow-hidden" style={{ boxShadow: '0 12px 32px -4px rgba(27, 28, 22, 0.06)' }}>
         <div className="px-6 py-4 flex items-center justify-between">
           <h2 className="text-heading-md font-semibold text-on-surface">Live Stock</h2>
-          <Link href="/app/inventory" className="text-body-sm text-primary font-semibold hover:underline">
+          <Link href="/inventory" className="text-body-sm text-primary font-semibold hover:underline">
             View all →
           </Link>
         </div>
@@ -227,7 +227,7 @@ export default async function DashboardPage() {
                       {action.status}
                     </span>
                     {action.status === 'pending' && (
-                      <Link href="/app/agents" className="text-primary text-body-sm font-bold hover:underline">
+                      <Link href="/agents" className="text-primary text-body-sm font-bold hover:underline">
                         Review →
                       </Link>
                     )}

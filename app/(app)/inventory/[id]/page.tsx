@@ -121,7 +121,7 @@ export default async function ItemDetailPage({ params }: PageProps) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link
-            href="/app/inventory"
+            href="/inventory"
             className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-low transition-colors text-on-surface-variant"
           >
             <ArrowLeft className="w-5 h-5" />
