@@ -77,7 +77,7 @@ export default function EditItemModal({ item, onClose }: EditItemModalProps) {
               <input name="cost_per_unit" type="number" min="0" step="any" defaultValue={item.cost_per_unit != null ? String(item.cost_per_unit) : ''} className="w-full px-3 py-2 bg-surface rounded-lg text-body-md text-on-surface font-mono focus:outline-none focus:ring-2 focus:ring-primary-fixed" placeholder="Optional" />
             </div>
             <div className="col-span-2 flex items-center gap-3">
-              <input name="track_expiry" id="edit_track_expiry" type="checkbox" value="true" defaultChecked={item.track_expiry} className="w-4 h-4 rounded accent-primary" />
+              <input name="track_expiry" id="edit_track_expiry" type="checkbox" value="true" defaultChecked={item.track_expiry ?? undefined} className="w-4 h-4 rounded accent-primary" />
               <label htmlFor="edit_track_expiry" className="text-body-md text-on-surface cursor-pointer">Track expiry date</label>
             </div>
           </div>

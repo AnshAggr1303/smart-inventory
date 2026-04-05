@@ -95,7 +95,7 @@ export default function TransactionFilter({ transactions, runningBalances }: Tra
                     className={`hover:bg-surface-low/30 transition-colors border-l-4 ${getBorderColor(tx)}`}
                   >
                     <td className="px-5 py-4 font-mono text-body-sm text-on-surface">
-                      {new Date(tx.created_at).toLocaleString('en-IN', {
+                      {new Date(tx.created_at ?? '').toLocaleString('en-IN', {
                         day: 'numeric',
                         month: 'short',
                         hour: '2-digit',
@@ -116,7 +116,7 @@ export default function TransactionFilter({ transactions, runningBalances }: Tra
                     </td>
                     <td className="px-5 py-4 font-mono text-right font-medium text-body-md text-on-surface">
                       {runningBalances[tx.id] != null
-                        ? formatQuantity(runningBalances[tx.id], tx.unit)
+                        ? formatQuantity(runningBalances[tx.id] ?? 0, tx.unit)
                         : '—'}
                     </td>
                   </tr>

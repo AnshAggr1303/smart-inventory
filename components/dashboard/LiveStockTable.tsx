@@ -102,7 +102,7 @@ export default function LiveStockTable({ initialItems, orgId }: LiveStockTablePr
                   <StatusPill status={status} />
                 </td>
                 <td className="px-6 py-4 text-body-sm text-on-surface-variant">
-                  {formatDistanceToNow(new Date(item.updated_at), { addSuffix: true })}
+                  {formatDistanceToNow(new Date(item.updated_at ?? ''), { addSuffix: true })}
                 </td>
                 <td className="px-6 py-4 text-right">
                   <Link

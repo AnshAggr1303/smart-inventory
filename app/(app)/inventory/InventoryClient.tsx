@@ -172,7 +172,7 @@ export default function InventoryClient({ items, totalCount }: InventoryClientPr
                       </td>
                       <td className="px-5 py-4"><StatusPill status={status} /></td>
                       <td className="px-5 py-4 text-body-sm text-on-surface-variant hidden md:table-cell">
-                        {formatDistanceToNow(new Date(item.updated_at), { addSuffix: true })}
+                        {formatDistanceToNow(new Date(item.updated_at ?? ''), { addSuffix: true })}
                       </td>
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-1">

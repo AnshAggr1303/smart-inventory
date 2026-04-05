@@ -33,7 +33,7 @@ function buildChartData(
   if (transactions.length === 0) return []
 
   const sorted = [...transactions].sort(
-    (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    (a, b) => new Date(a.created_at ?? '').getTime() - new Date(b.created_at ?? '').getTime()
   )
 
   const sumOf30 = sorted.reduce((sum, t) => sum + Number(t.quantity) * Number(t.unit_multiplier), 0)
@@ -41,7 +41,7 @@ function buildChartData(
 
   return sorted.map((t) => {
     balance += Number(t.quantity) * Number(t.unit_multiplier)
-    const date = new Date(t.created_at)
+    const date = new Date(t.created_at ?? '')
     return {
       date: date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
       stock: Math.max(0, parseFloat(balance.toFixed(2))),

@@ -18,7 +18,7 @@ function computeRunningBalances(
   currentStock: number
 ): Record<string, number> {
   const sorted = [...transactions].sort(
-    (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    (a, b) => new Date(a.created_at ?? '').getTime() - new Date(b.created_at ?? '').getTime()
   )
   const sumAll = sorted.reduce((s, t) => s + Number(t.quantity) * Number(t.unit_multiplier), 0)
   let balance = currentStock - sumAll
@@ -71,7 +71,7 @@ export default async function ItemDetailPage({ params }: PageProps) {
   // Compute avg daily usage from last 30 days
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
   const recentDeductions = txList.filter(
-    (t) => Number(t.quantity) < 0 && new Date(t.created_at) >= thirtyDaysAgo
+    (t) => Number(t.quantity) < 0 && new Date(t.created_at ?? '') >= thirtyDaysAgo
   )
   const totalUsed = recentDeductions.reduce(
     (sum, t) => sum + Math.abs(Number(t.quantity) * Number(t.unit_multiplier)),
@@ -189,7 +189,7 @@ export default async function ItemDetailPage({ params }: PageProps) {
               <p className="text-body-sm text-on-surface-variant/60 mb-1">Last Restocked</p>
               <p className="font-mono font-medium text-body-md text-on-surface">
                 {lastRestock
-                  ? new Date(lastRestock.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+                  ? new Date(lastRestock.created_at ?? '').toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
                   : '—'}
               </p>
             </div>
@@ -198,7 +198,7 @@ export default async function ItemDetailPage({ params }: PageProps) {
                 <p className="text-body-sm text-on-surface-variant/60 mb-1">Expiry Date</p>
                 <p className="font-medium text-error flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
-                  {new Date(item.earliest_expiry).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  {new Date(item.earliest_expiry ?? '').toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                 </p>
               </div>
             )}

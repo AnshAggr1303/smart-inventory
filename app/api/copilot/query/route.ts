@@ -48,7 +48,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const lowStockItems =
     items
-      ?.filter((i) => i.reorder_point > 0 && i.current_stock <= i.reorder_point)
+      ?.filter((i) => (i.reorder_point ?? 0) > 0 && (i.current_stock ?? 0) <= (i.reorder_point ?? 0))
       .map((i) => ({ name: i.name, current_stock: i.current_stock, unit: i.unit })) ?? []
 
   const { data: transactionCountResult } = await supabase

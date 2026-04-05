@@ -46,7 +46,7 @@ async function getOrgId(supabase: Awaited<ReturnType<typeof createServerClient>>
 // ── Actions ────────────────────────────────────────────────
 
 export async function createItemAction(
-  _prevState: { error?: string } | null,
+  _prevState: { success: true; id: string } | { success: false; error: string } | null,
   formData: FormData
 ): Promise<{ success: true; id: string } | { success: false; error: string }> {
   const supabase = await createServerClient()
@@ -71,7 +71,7 @@ export async function createItemAction(
 
   const parsed = CreateItemSchema.safeParse(raw)
   if (!parsed.success) {
-    return { success: false, error: parsed.error.errors[0]?.message ?? 'Invalid input' }
+    return { success: false, error: parsed.error.issues[0]?.message ?? 'Invalid input' }
   }
 
   const { data, error } = await (supabase as unknown as {
@@ -101,7 +101,7 @@ export async function createItemAction(
 }
 
 export async function updateItemAction(
-  _prevState: { error?: string } | null,
+  _prevState: { success: true } | { success: false; error: string } | null,
   formData: FormData
 ): Promise<{ success: true } | { success: false; error: string }> {
   const supabase = await createServerClient()
@@ -126,7 +126,7 @@ export async function updateItemAction(
 
   const parsed = UpdateItemSchema.safeParse(raw)
   if (!parsed.success) {
-    return { success: false, error: parsed.error.errors[0]?.message ?? 'Invalid input' }
+    return { success: false, error: parsed.error.issues[0]?.message ?? 'Invalid input' }
   }
 
   const { error } = await supabase

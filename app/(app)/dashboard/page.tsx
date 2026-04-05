@@ -211,7 +211,7 @@ export default async function DashboardPage() {
                   <div className="flex-1 min-w-0">
                     <p className="text-body-md font-semibold text-on-surface truncate">{action.title}</p>
                     <p className="text-body-sm text-on-surface-variant">
-                      {formatDistanceToNow(new Date(action.triggered_at), { addSuffix: true })}
+                      {formatDistanceToNow(new Date(action.triggered_at ?? ''), { addSuffix: true })}
                     </p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
