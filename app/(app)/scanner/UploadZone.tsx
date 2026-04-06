@@ -6,10 +6,10 @@ import { useRef, useState } from 'react'
 type UploadZoneProps = {
   onFileSelect: (file: File) => void
   onTextSubmit: (text: string) => void
-  disabled: boolean
+  disabled?: boolean
 }
 
-export default function UploadZone({ onFileSelect, onTextSubmit, disabled }: UploadZoneProps) {
+export default function UploadZone({ onFileSelect, onTextSubmit, disabled = false }: UploadZoneProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
   const [manualText, setManualText] = useState('')

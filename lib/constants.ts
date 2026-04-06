@@ -1,3 +1,8 @@
+// ─── Scanner UI ───────────────────────────────────────────────────────────────
+
+/** Minimum progress bar fill percentage in scanner to avoid a 0-width bar while scanning starts */
+export const SCANNER_MIN_PROGRESS_PCT = 5
+
 // ─── OCR pipeline ─────────────────────────────────────────────────────────────
 
 /** Minimum Gemini/Tesseract confidence score to auto-accept an item match */

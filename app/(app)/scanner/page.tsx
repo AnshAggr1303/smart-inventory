@@ -8,6 +8,7 @@ import ConfirmTable, { type ConfirmedItem, type BillMeta } from './ConfirmTable'
 import { preprocessImage } from '@/lib/ocr/preprocessImage'
 import { extractTextClient } from '@/lib/ocr/tesseractClient'
 import type { NormalisedItem } from '@/lib/ocr/normaliseItems'
+import { SCANNER_MIN_PROGRESS_PCT } from '@/lib/constants'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -151,7 +152,8 @@ export default function ScannerPage() {
       })
 
       if (!extractRes.ok) {
-        throw new Error('Extraction failed.')
+        const errBody = (await extractRes.json()) as { error?: string }
+        throw new Error(errBody.error ?? 'Extraction failed.')
       }
 
       const extractData = (await extractRes.json()) as {
@@ -269,7 +271,6 @@ export default function ScannerPage() {
           <UploadZone
             onFileSelect={handleFileSelect}
             onTextSubmit={handleTextSubmit}
-            disabled={false}
           />
           <div className="flex-[1.5] flex items-center justify-center min-h-[360px] bg-surface-container-low rounded-xl">
             <div className="text-center space-y-3 p-8">
@@ -300,7 +301,7 @@ export default function ScannerPage() {
                     className="h-full bg-gradient-to-r from-primary to-primary-container rounded-full transition-all duration-500"
                     style={{
                       width: `${Math.max(
-                        5,
+                        SCANNER_MIN_PROGRESS_PCT,
                         (steps.filter((s) => s.done).length / steps.length) * 100
                       )}%`,
                     }}
@@ -313,36 +314,37 @@ export default function ScannerPage() {
 
               {/* Step indicators */}
               <div className="space-y-4">
-                {steps.map((step, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <div
-                      className={[
-                        'w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-colors',
-                        step.done
-                          ? 'bg-primary text-on-primary'
-                          : idx === steps.findIndex((s) => !s.done)
-                          ? 'bg-primary-fixed text-primary'
-                          : 'bg-surface-container text-on-surface/30',
-                      ].join(' ')}
-                    >
-                      {step.done ? (
-                        <span className="material-symbols-outlined text-sm">check</span>
-                      ) : idx === steps.findIndex((s) => !s.done) ? (
-                        <span className="text-xs font-bold">{idx + 1}</span>
-                      ) : (
-                        <span className="text-xs font-bold">{idx + 1}</span>
-                      )}
+                {(() => {
+                  const activeStepIndex = steps.findIndex((s) => !s.done)
+                  return steps.map((step, idx) => (
+                    <div key={step.label} className="flex items-center gap-3">
+                      <div
+                        className={[
+                          'w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 transition-colors',
+                          step.done
+                            ? 'bg-primary text-on-primary'
+                            : idx === activeStepIndex
+                            ? 'bg-primary-fixed text-primary'
+                            : 'bg-surface-container text-on-surface/30',
+                        ].join(' ')}
+                      >
+                        {step.done ? (
+                          <span className="material-symbols-outlined text-sm">check</span>
+                        ) : (
+                          <span className="text-xs font-bold">{idx + 1}</span>
+                        )}
+                      </div>
+                      <span
+                        className={[
+                          'text-sm',
+                          step.done ? 'text-on-surface font-medium' : 'text-on-surface/40',
+                        ].join(' ')}
+                      >
+                        {step.label}
+                      </span>
                     </div>
-                    <span
-                      className={[
-                        'text-sm',
-                        step.done ? 'text-on-surface font-medium' : 'text-on-surface/40',
-                      ].join(' ')}
-                    >
-                      {step.label}
-                    </span>
-                  </div>
-                ))}
+                  ))
+                })()}
               </div>
             </div>
           </div>
