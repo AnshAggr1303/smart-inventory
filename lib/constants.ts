@@ -12,6 +12,9 @@ export const OCR_MAX_WIDTH_PX = 1600
 /** JPEG quality (0–1) used when exporting preprocessed bill images */
 export const OCR_JPEG_QUALITY = 0.85
 
+/** Byte chunk size for chunked String.fromCharCode when encoding PDF binary to base64 */
+export const OCR_PDF_CHUNK_SIZE = 8192
+
 // ─── Stock thresholds ─────────────────────────────────────────────────────────
 
 /** current_stock / reorder_point below this ratio is flagged as critical */

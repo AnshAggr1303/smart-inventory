@@ -1,7 +1,7 @@
 'use client'
 // Client component: browser Canvas API — never import in server code
 
-import { OCR_MAX_FILE_SIZE_MB, OCR_MAX_WIDTH_PX, OCR_JPEG_QUALITY } from '@/lib/constants'
+import { OCR_MAX_FILE_SIZE_MB, OCR_MAX_WIDTH_PX, OCR_JPEG_QUALITY, OCR_PDF_CHUNK_SIZE } from '@/lib/constants'
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf']
 
@@ -26,10 +26,9 @@ export async function preprocessImage(file: File): Promise<PreprocessResult> {
   if (file.type === 'application/pdf') {
     const arrayBuffer = await file.arrayBuffer()
     const bytes = new Uint8Array(arrayBuffer)
-    const CHUNK_SIZE = 8192
     let binary = ''
-    for (let offset = 0; offset < bytes.byteLength; offset += CHUNK_SIZE) {
-      const chunk = bytes.subarray(offset, offset + CHUNK_SIZE)
+    for (let offset = 0; offset < bytes.byteLength; offset += OCR_PDF_CHUNK_SIZE) {
+      const chunk = bytes.subarray(offset, offset + OCR_PDF_CHUNK_SIZE)
       binary += String.fromCharCode(...chunk)
     }
     const base64 = btoa(binary)
