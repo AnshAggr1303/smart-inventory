@@ -1,15 +1,13 @@
 'use client'
 // Client component: browser Canvas API — never import in server code
 
-import { OCR_MAX_FILE_SIZE_MB } from '@/lib/constants'
+import { OCR_MAX_FILE_SIZE_MB, OCR_MAX_WIDTH_PX, OCR_JPEG_QUALITY } from '@/lib/constants'
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf']
-const MAX_WIDTH = 1600
-const JPEG_QUALITY = 0.85
 
 export type PreprocessResult = {
   base64: string
-  mimeType: 'image/jpeg' | 'image/png'
+  mimeType: 'image/jpeg' | 'image/png' | 'application/pdf'
   originalSize: number
   processedSize: number
 }
@@ -28,14 +26,16 @@ export async function preprocessImage(file: File): Promise<PreprocessResult> {
   if (file.type === 'application/pdf') {
     const arrayBuffer = await file.arrayBuffer()
     const bytes = new Uint8Array(arrayBuffer)
+    const CHUNK_SIZE = 8192
     let binary = ''
-    for (let i = 0; i < bytes.byteLength; i++) {
-      binary += String.fromCharCode(bytes[i] ?? 0)
+    for (let offset = 0; offset < bytes.byteLength; offset += CHUNK_SIZE) {
+      const chunk = bytes.subarray(offset, offset + CHUNK_SIZE)
+      binary += String.fromCharCode(...chunk)
     }
     const base64 = btoa(binary)
     return {
       base64,
-      mimeType: 'image/jpeg', // placeholder — caller uses 'application/pdf' for PDFs
+      mimeType: 'application/pdf',
       originalSize: file.size,
       processedSize: file.size,
     }
@@ -43,7 +43,7 @@ export async function preprocessImage(file: File): Promise<PreprocessResult> {
 
   const imageBitmap = await createImageBitmap(file)
 
-  const scale = imageBitmap.width > MAX_WIDTH ? MAX_WIDTH / imageBitmap.width : 1
+  const scale = imageBitmap.width > OCR_MAX_WIDTH_PX ? OCR_MAX_WIDTH_PX / imageBitmap.width : 1
   const width = Math.round(imageBitmap.width * scale)
   const height = Math.round(imageBitmap.height * scale)
 
@@ -54,6 +54,7 @@ export async function preprocessImage(file: File): Promise<PreprocessResult> {
   if (!ctx) throw new Error('Canvas context unavailable.')
 
   ctx.drawImage(imageBitmap, 0, 0, width, height)
+  imageBitmap.close()
 
   // Greyscale: ITU-R BT.601 luma coefficients
   const imageData = ctx.getImageData(0, 0, width, height)
@@ -70,7 +71,7 @@ export async function preprocessImage(file: File): Promise<PreprocessResult> {
   }
   ctx.putImageData(imageData, 0, 0)
 
-  const dataUrl = canvas.toDataURL('image/jpeg', JPEG_QUALITY)
+  const dataUrl = canvas.toDataURL('image/jpeg', OCR_JPEG_QUALITY)
   // dataUrl format: "data:image/jpeg;base64,<base64>"
   const base64 = dataUrl.split(',')[1] ?? ''
 

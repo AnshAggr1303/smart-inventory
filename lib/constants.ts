@@ -6,6 +6,12 @@ export const OCR_CONFIDENCE_THRESHOLD = 0.6
 /** Maximum bill image size accepted for upload (enforced client + server) */
 export const OCR_MAX_FILE_SIZE_MB = 10
 
+/** Maximum image width in pixels before downscaling during OCR preprocessing */
+export const OCR_MAX_WIDTH_PX = 1600
+
+/** JPEG quality (0–1) used when exporting preprocessed bill images */
+export const OCR_JPEG_QUALITY = 0.85
+
 // ─── Stock thresholds ─────────────────────────────────────────────────────────
 
 /** current_stock / reorder_point below this ratio is flagged as critical */
