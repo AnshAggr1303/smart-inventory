@@ -32,10 +32,10 @@ begin
   -- 1. Insert the bill row
   insert into bills (
     org_id, supplier_name, bill_date,
-    bill_number, image_url, status, created_by
+    bill_number, image_url, status, confirmed_at, created_by
   ) values (
     p_org_id, p_supplier_name, p_bill_date,
-    p_bill_number, p_image_url, 'confirmed', p_user_id
+    p_bill_number, p_image_url, 'confirmed', now(), p_user_id
   )
   returning id into v_bill_id;
 
@@ -91,24 +91,40 @@ begin
 end;
 $$;
 
+-- Grant execute permission to authenticated users
+grant execute on function confirm_bill_and_update_stock(
+  uuid, uuid, text, date, text, text, jsonb
+) to authenticated;
+
 -- ─── Storage bucket for bill images ──────────────────────────────────────────
 
 insert into storage.buckets (id, name, public)
 values ('bill-images', 'bill-images', false)
 on conflict (id) do nothing;
 
--- RLS: authenticated users can upload bill images
-create policy "Users can upload bill images"
+-- RLS: users can only upload bill images for their own org
+-- Storage path format: {org_id}/{year}/{month}/{uuid}.jpg
+create policy "Users can upload their org bills"
 on storage.objects for insert
 with check (
   bucket_id = 'bill-images'
   and auth.uid() is not null
+  and (storage.foldername(name))[1] = (
+    select org_id::text
+    from user_profiles
+    where id = auth.uid()
+  )
 );
 
--- RLS: authenticated users can read bill images
-create policy "Users can read bill images"
+-- RLS: users can only view bill images for their own org
+create policy "Users can view their org bills"
 on storage.objects for select
 using (
   bucket_id = 'bill-images'
   and auth.uid() is not null
+  and (storage.foldername(name))[1] = (
+    select org_id::text
+    from user_profiles
+    where id = auth.uid()
+  )
 );
