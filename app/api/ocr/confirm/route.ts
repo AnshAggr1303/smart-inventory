@@ -22,8 +22,31 @@ const confirmSchema = z.object({
   bill_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   bill_number: z.string(),
   image_base64: z.string().nullable(),
-  image_mime_type: z.string().nullable(),
+  image_mime_type: z.enum(['image/jpeg', 'image/png', 'image/webp', 'application/pdf']).nullable(),
 })
+
+// ─── RPC wrapper ──────────────────────────────────────────────────────────────
+
+type ConfirmBillResult = string // Returns uuid (bill_id)
+
+async function callConfirmBillRpc(
+  supabase: Awaited<ReturnType<typeof createServerClient>>,
+  params: {
+    p_org_id: string
+    p_user_id: string
+    p_supplier_name: string | null
+    p_bill_date: string
+    p_bill_number: string | null
+    p_image_url: string | null
+    p_items: unknown[]
+  }
+): Promise<{ data: ConfirmBillResult | null; error: { message: string } | null }> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (supabase as any).rpc('confirm_bill_and_update_stock', params) as Promise<{
+    data: ConfirmBillResult | null
+    error: { message: string } | null
+  }>
+}
 
 // ─── POST handler ─────────────────────────────────────────────────────────────
 
@@ -96,7 +119,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
       // If upload fails, continue without image — not a blocking error
     } catch {
-      // Image upload failure is non-fatal — bill can still be confirmed
+      console.error(
+        JSON.stringify({
+          event: 'bill_image_upload_failed',
+          success: false,
+          timestamp: new Date().toISOString(),
+        })
+      )
     }
   }
 
@@ -112,14 +141,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }))
 
   // 5. Call atomic RPC — creates bill + items + transactions in one transaction
-  const { data: bill_id, error: rpcError } = await (
-    supabase as unknown as {
-      rpc: (
-        name: string,
-        args: Record<string, unknown>
-      ) => Promise<{ data: string | null; error: unknown }>
-    }
-  ).rpc('confirm_bill_and_update_stock', {
+  const { data: bill_id, error: rpcError } = await callConfirmBillRpc(supabase, {
     p_org_id: org_id,
     p_user_id: user_id,
     p_supplier_name: supplier_name || null,
@@ -130,6 +152,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   })
 
   if (rpcError) {
+    console.error(
+      JSON.stringify({
+        event: 'confirm_bill_rpc_error',
+        error: rpcError.message,
+        success: false,
+        timestamp: new Date().toISOString(),
+      })
+    )
     return NextResponse.json(
       { error: 'Failed to save bill. Please try again.' },
       { status: 500 }
