@@ -70,11 +70,21 @@ export async function normaliseExtractedItems(
 
   // 2. Fetch existing items for this org
   const supabase = await createServerClient()
-  const { data: existingItems } = await supabase
+  const { data: existingItems, error: inventoryError } = await supabase
     .from('items')
     .select('id, name, name_normalised')
     .eq('org_id', org_id)
     .eq('is_archived', false)
+
+  if (inventoryError) {
+    console.error(
+      JSON.stringify({
+        event: 'normalise_items_inventory_fetch_failed',
+        error: inventoryError.message,
+        timestamp: new Date().toISOString(),
+      })
+    )
+  }
 
   const inventory = existingItems ?? []
 
