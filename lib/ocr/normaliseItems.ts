@@ -124,10 +124,12 @@ export async function normaliseExtractedItems(
     } catch {
       // LLM failed or parse failed — fall back to Levenshtein for each item
       for (const item of needsFuzzy) {
-        const candidateNames = inventory.map((inv) => inv.name)
+        const candidateNames = inventory.map((inv) => inv.name_normalised ?? inv.name)
         const best = findBestMatch(item.clean_name, candidateNames)
         if (best && best.score >= OCR_CONFIDENCE_THRESHOLD) {
-          const matched = inventory.find((inv) => inv.name === best.match)
+          const matched = inventory.find(
+            (inv) => (inv.name_normalised ?? inv.name) === best.match
+          )
           llmMatches.set(item.clean_name, {
             matched_id: matched?.id ?? null,
             matched_name: matched?.name ?? null,
