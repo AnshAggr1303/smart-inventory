@@ -8,6 +8,18 @@ import { billVisionPrompt } from '@/lib/llm/prompts/billParse'
 import { billParseFallback } from '@/lib/llm/fallbacks'
 import { normaliseExtractedItems, type RawExtractedItem } from '@/lib/ocr/normaliseItems'
 
+// ─── MIME type validation ─────────────────────────────────────────────────────
+
+const VALID_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'] as const
+type ValidMimeType = (typeof VALID_MIME_TYPES)[number]
+
+function toValidMimeType(raw: string): ValidMimeType {
+  if ((VALID_MIME_TYPES as readonly string[]).includes(raw)) {
+    return raw as ValidMimeType
+  }
+  return 'image/jpeg'
+}
+
 // ─── Input schema ─────────────────────────────────────────────────────────────
 
 const extractSchema = z.object({
@@ -63,57 +75,64 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const { imageBase64, mimeType, tesseractText } = parsed.data
 
-  // 3. Call Gemini vision via LLM router
-  // Always returns 200 — fallback to Tesseract if Gemini is unavailable
-  const visionResult = await routeLLMTask({
-    task: 'bill_vision',
-    payload: {
-      image_base64: imageBase64,
-      mime_type: mimeType as 'image/jpeg' | 'image/png' | 'application/pdf',
-      prompt: billVisionPrompt(),
-      tesseract_text: tesseractText,
-    },
-    org_id,
-    user_id,
-  })
-
-  // 4. Parse the vision result as JSON array of items
+  // 3. Call Gemini vision OR skip for text-only submissions
   let rawItems: RawExtractedItem[]
-  let fallback_used = visionResult.fallback_used
+  let fallback_used = false
 
-  const jsonParseResult = rawItemSchema.safeParse(
-    (() => {
-      try {
-        // Strip markdown code fences if Gemini wrapped the JSON
-        const cleaned = visionResult.result
-          .replace(/^```(?:json)?\s*/i, '')
-          .replace(/\s*```$/, '')
-          .trim()
-        return JSON.parse(cleaned)
-      } catch {
-        return null
-      }
-    })()
-  )
-
-  if (jsonParseResult.success) {
-    rawItems = jsonParseResult.data
-  } else {
-    // JSON parse failed — Gemini returned text, or we got Tesseract text
-    // Use the text-based bill parse fallback
-    rawItems = billParseFallback(visionResult.result || tesseractText)
-    fallback_used = true
-  }
-
-  if (rawItems.length === 0 && tesseractText.length > 10) {
+  if (imageBase64.length === 0) {
+    // Text-only submission — skip Gemini, parse tesseractText directly
     rawItems = billParseFallback(tesseractText)
     fallback_used = true
+  } else {
+    const visionResult = await routeLLMTask({
+      task: 'bill_vision',
+      payload: {
+        image_base64: imageBase64,
+        mime_type: toValidMimeType(mimeType),
+        prompt: billVisionPrompt(),
+        tesseract_text: tesseractText,
+      },
+      org_id,
+      user_id,
+    })
+
+    fallback_used = visionResult.fallback_used
+
+    const jsonParseResult = rawItemSchema.safeParse(
+      (() => {
+        try {
+          // Strip markdown code fences if Gemini wrapped the JSON
+          const cleaned = visionResult.result
+            .replace(/^```(?:json)?\s*/i, '')
+            .replace(/\s*```$/, '')
+            .trim()
+          return JSON.parse(cleaned)
+        } catch {
+          return null
+        }
+      })()
+    )
+
+    if (jsonParseResult.success) {
+      rawItems = jsonParseResult.data
+    } else {
+      // JSON parse failed — Gemini returned text, or we got Tesseract text
+      // Use the text-based bill parse fallback
+      rawItems = billParseFallback(visionResult.result || tesseractText)
+      fallback_used = true
+    }
+
+    // If Gemini returned valid but empty JSON [], try tesseractText as a last resort
+    if (rawItems.length === 0 && tesseractText.length > 10) {
+      rawItems = billParseFallback(tesseractText)
+      fallback_used = true
+    }
   }
 
-  // 5. Normalise + match items to existing inventory
+  // 4. Normalise + match items to existing inventory
   const normalisedItems = await normaliseExtractedItems(rawItems, org_id, user_id)
 
-  // 6. Respond — always 200 (OCR never returns 500)
+  // 5. Respond — always 200 (OCR never returns 500)
   return NextResponse.json({
     items: normalisedItems,
     fallback_used,
