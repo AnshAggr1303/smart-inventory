@@ -13,6 +13,7 @@ type InventoryItem = {
 }
 
 type IngredientRow = {
+  key: string
   item_id: string
   quantity: string
   unit: string
@@ -41,19 +42,20 @@ export function RecipeForm({ label, items, recipe, onSuccess, onCancel }: Props)
   const [ingredients, setIngredients] = useState<IngredientRow[]>(
     recipe?.ingredients?.length
       ? recipe.ingredients.map(i => ({
+          key: crypto.randomUUID(),
           item_id: i.item_id,
           quantity: String(i.quantity),
           unit: i.unit,
         }))
-      : [{ item_id: '', quantity: '', unit: '' }]
+      : [{ key: crypto.randomUUID(), item_id: '', quantity: '', unit: '' }]
   )
 
   function addIngredient() {
-    setIngredients(prev => [...prev, { item_id: '', quantity: '', unit: '' }])
+    setIngredients(prev => [...prev, { key: crypto.randomUUID(), item_id: '', quantity: '', unit: '' }])
   }
 
   function removeIngredient(index: number) {
-    setIngredients(prev => prev.filter((_, i) => i !== index))
+    setIngredients(prev => prev.filter((row, i) => i !== index))
   }
 
   function updateIngredient(index: number, field: keyof IngredientRow, value: string) {
@@ -234,7 +236,7 @@ export function RecipeForm({ label, items, recipe, onSuccess, onCancel }: Props)
           </div>
           {ingredients.map((row, index) => (
             <div
-              key={index}
+              key={row.key}
               className="grid grid-cols-[1fr_100px_100px_32px] gap-2 px-4 py-3 hover:bg-surface-container-low/20 transition-colors"
             >
               <select
@@ -274,7 +276,7 @@ export function RecipeForm({ label, items, recipe, onSuccess, onCancel }: Props)
               </button>
             </div>
           ))}
-          <div className="px-4 py-3 border-t border-outline-variant/10">
+          <div className="px-4 pt-4">
             <button
               type="button"
               onClick={addIngredient}
@@ -291,14 +293,14 @@ export function RecipeForm({ label, items, recipe, onSuccess, onCancel }: Props)
         <button
           type="button"
           onClick={onCancel}
-          className="px-6 py-3 bg-surface-container-lowest border border-outline-variant/20 rounded-xl font-semibold text-sm hover:bg-surface-container-low transition-colors"
+          className="px-6 py-3 bg-surface-container-lowest border border-outline-variant/15 rounded-xl font-semibold text-sm hover:bg-surface-container-low transition-colors"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isPending}
-          className="flex-1 bg-primary-container text-on-primary py-3 rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all disabled:opacity-50"
+          className="flex-1 bg-gradient-to-r from-primary to-primary-container text-on-primary py-3 rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all disabled:opacity-50"
         >
           {isPending ? 'Saving...' : recipe ? 'Save changes' : `Create ${label}`}
         </button>
