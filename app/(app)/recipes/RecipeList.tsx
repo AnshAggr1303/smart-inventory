@@ -27,7 +27,7 @@ export function RecipeList({ recipes, selectedId, label, onSelect, onNew }: Prop
       <div className="space-y-4">
         <button
           onClick={onNew}
-          className="w-full bg-primary-container text-on-primary py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:opacity-90 active:scale-95 transition-all"
+          className="w-full bg-gradient-to-r from-primary to-primary-container text-on-primary py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:opacity-90 active:scale-95 transition-all"
         >
           <Plus className="w-4 h-4" />
           New {label}
@@ -60,7 +60,7 @@ export function RecipeList({ recipes, selectedId, label, onSelect, onNew }: Prop
               </p>
               <button
                 onClick={onNew}
-                className="mt-2 px-4 py-2 bg-primary-container text-on-primary rounded-lg text-sm font-bold hover:opacity-90 transition-all"
+                className="mt-2 px-4 py-2 bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-lg text-sm font-bold hover:opacity-90 transition-all"
               >
                 New {label}
               </button>
@@ -78,7 +78,7 @@ export function RecipeList({ recipes, selectedId, label, onSelect, onNew }: Prop
                 className={`w-full text-left p-4 rounded-xl transition-all group ${
                   isSelected
                     ? 'bg-surface-container-lowest shadow-md border-2 border-primary-container'
-                    : 'bg-surface-container-lowest shadow-sm border border-transparent hover:border-primary/20'
+                    : 'bg-surface-container-lowest shadow-sm hover:bg-surface-container-low'
                 }`}
               >
                 <div className="flex justify-between items-start mb-2">
