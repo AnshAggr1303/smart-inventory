@@ -307,27 +307,42 @@ export async function deductRecipeAction(rawInput: unknown): Promise<
         Number(item.reorder_point) > 0 &&
         Number(item.current_stock) <= Number(item.reorder_point)
       ) {
-        low_stock_alerts.push(item.name)
-        await supabase.from('agent_actions').insert({
-          org_id,
-          agent_type: 'reorder',
-          status: 'pending',
-          title: `Reorder ${item.name}`,
-          description: `${item.name} dropped to ${item.current_stock}${item.unit}, below reorder point of ${item.reorder_point}${item.unit}.`,
-          payload: {
-            item_id: row.item_id,
-            current_stock: item.current_stock,
-            reorder_point: item.reorder_point,
-            reorder_qty: item.reorder_qty,
-            unit: item.unit,
-            supplier_id: item.preferred_supplier_id,
-          },
-        })
+        // Check if a pending reorder action already exists for this item
+        const { count: existingCount } = await supabase
+          .from('agent_actions')
+          .select('id', { count: 'exact', head: true })
+          .eq('org_id', org_id)
+          .eq('agent_type', 'reorder')
+          .eq('status', 'pending')
+          .filter('payload->>item_id', 'eq', row.item_id)
+
+        if ((existingCount ?? 0) === 0) {
+          low_stock_alerts.push(item.name)
+          await supabase.from('agent_actions').insert({
+            org_id,
+            agent_type: 'reorder',
+            status: 'pending',
+            title: `Reorder ${item.name}`,
+            description: `${item.name} dropped to ${item.current_stock}${item.unit}, below reorder point of ${item.reorder_point}${item.unit}.`,
+            payload: {
+              item_id: row.item_id,
+              current_stock: item.current_stock,
+              reorder_point: item.reorder_point,
+              reorder_qty: item.reorder_qty,
+              unit: item.unit,
+              supplier_id: item.preferred_supplier_id,
+            },
+          })
+        } else {
+          // Already have a pending reorder — still surface the alert in the UI response
+          low_stock_alerts.push(item.name)
+        }
       }
     }
 
     revalidatePath('/dashboard')
     revalidatePath('/recipes')
+    revalidatePath('/inventory')
 
     return {
       success: true,
