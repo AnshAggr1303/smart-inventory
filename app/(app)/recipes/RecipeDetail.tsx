@@ -17,7 +17,7 @@ type Props = {
 
 function getStockColor(current: number, reorder: number): string {
   if (current <= 0) return 'text-error'
-  if (current <= reorder && reorder > 0) return 'text-amber-600'
+  if (current <= reorder && reorder > 0) return 'text-tertiary'
   return 'text-emerald-600'
 }
 
@@ -364,7 +364,7 @@ export function RecipeDetail({ recipe, label, onEdit, onArchived }: Props) {
           )}
 
           {deductSuccess && (
-            <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm px-4 py-3 rounded-xl font-semibold">
+            <div className="bg-secondary-fixed/20 border border-secondary-fixed text-on-secondary-container text-sm px-4 py-3 rounded-xl font-semibold">
               {deductSuccess}
             </div>
           )}
