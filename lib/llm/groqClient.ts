@@ -39,6 +39,16 @@ export async function callGroq(params: CallGroqParams): Promise<string> {
     const key = keys[keyIndex]
     if (!key) continue
 
+    const requestBody = JSON.stringify({ model, messages, temperature, max_tokens })
+    console.log('[groq] request body:', JSON.stringify({
+      model,
+      messages: messages.map(m => ({
+        role: m.role,
+        contentLength: m.content.length,
+        contentPreview: m.content.slice(0, 100),
+      })),
+    }, null, 2))
+
     let res: Response
     try {
       res = await fetch(GROQ_API_URL, {
@@ -47,7 +57,7 @@ export async function callGroq(params: CallGroqParams): Promise<string> {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${key}`,
         },
-        body: JSON.stringify({ model, messages, temperature, max_tokens }),
+        body: requestBody,
       })
     } catch (networkError) {
       lastError = networkError instanceof Error ? networkError : new Error(String(networkError))
@@ -65,6 +75,8 @@ export async function callGroq(params: CallGroqParams): Promise<string> {
     }
 
     if (!res.ok) {
+      const errorBody = await res.text().catch(() => '(could not read body)')
+      console.error('[groq] error response:', res.status, errorBody)
       lastError = new Error(`Groq API error: ${res.status}`)
       continue
     }

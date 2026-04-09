@@ -40,7 +40,7 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
   const pathname = usePathname()
   const title = getPageTitle(pathname)
   const { data: pendingCount = 0 } = useSWR('pending-agent-count', fetchPendingCount, {
-    refreshInterval: 30_000,
+    refreshInterval: 60_000,
   })
 
   return (

@@ -88,6 +88,24 @@ export async function normaliseExtractedItems(
 
   const inventory = existingItems ?? []
 
+  console.log('[normalise] existing items count:', inventory.length)
+
+  // Early return: if no existing items, every extracted item is new — skip LLM entirely
+  if (inventory.length === 0) {
+    return cleaned.map((item) => ({
+      raw_name: item.name,
+      clean_name: item.clean_name,
+      quantity: item.quantity,
+      unit: item.unit,
+      price_per_unit: item.price_per_unit,
+      total_price: item.total_price,
+      matched_item_id: null,
+      matched_item_name: null,
+      confidence_score: 0,
+      is_new_item: true,
+    }))
+  }
+
   // 3. Exact match first — confidence 1.0
   const exactMatched = new Map<string, { matched_item_id: string; matched_item_name: string }>()
   for (const cleaned_item of cleaned) {
@@ -109,27 +127,37 @@ export async function normaliseExtractedItems(
   >()
 
   if (needsFuzzy.length > 0) {
-    const extractedNames = needsFuzzy.map((c) => c.clean_name)
     const existingForLLM = inventory.map((inv) => ({ id: inv.id, name: inv.name }))
 
-    try {
-      const llmResult = await routeLLMTask({
-        task: 'item_normalise',
-        payload: {
-          extracted_names: extractedNames,
-          existing_items: existingForLLM,
-        },
-        org_id,
-        user_id,
-      })
+    // Batch into chunks of max 10 to avoid Groq 400 errors on large payloads
+    const BATCH_SIZE = 10
+    const batches: (typeof needsFuzzy)[] = []
+    for (let i = 0; i < needsFuzzy.length; i += BATCH_SIZE) {
+      batches.push(needsFuzzy.slice(i, i + BATCH_SIZE))
+    }
 
-      const parsed = llmMatchSchema.parse(JSON.parse(llmResult.result))
-      for (const match of parsed) {
-        llmMatches.set(match.extracted_name, {
-          matched_id: match.matched_id,
-          matched_name: match.matched_name,
-          confidence: match.confidence,
+    try {
+      for (const batch of batches) {
+        const extractedNames = batch.map((c) => c.clean_name)
+        console.log('[normalise] calling Groq for batch:', extractedNames)
+        const llmResult = await routeLLMTask({
+          task: 'item_normalise',
+          payload: {
+            extracted_names: extractedNames,
+            existing_items: existingForLLM,
+          },
+          org_id,
+          user_id,
         })
+
+        const parsed = llmMatchSchema.parse(JSON.parse(llmResult.result))
+        for (const match of parsed) {
+          llmMatches.set(match.extracted_name, {
+            matched_id: match.matched_id,
+            matched_name: match.matched_name,
+            confidence: match.confidence,
+          })
+        }
       }
     } catch {
       // LLM failed or parse failed — fall back to Levenshtein for each item

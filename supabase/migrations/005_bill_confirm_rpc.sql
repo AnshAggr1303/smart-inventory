@@ -5,6 +5,10 @@
 -- Creates the bill row, inserts new items if needed, and inserts transactions.
 -- The existing trigger on transactions updates items.current_stock atomically.
 
+drop function if exists confirm_bill_and_update_stock(
+  uuid, uuid, text, date, text, text, jsonb
+) cascade;
+
 create or replace function confirm_bill_and_update_stock(
   p_org_id        uuid,
   p_user_id       uuid,
@@ -104,6 +108,9 @@ on conflict (id) do nothing;
 
 -- RLS: users can only upload bill images for their own org
 -- Storage path format: {org_id}/{year}/{month}/{uuid}.jpg
+drop policy if exists "Users can upload their org bills" on storage.objects;
+drop policy if exists "Users can view their org bills" on storage.objects;
+
 create policy "Users can upload their org bills"
 on storage.objects for insert
 with check (

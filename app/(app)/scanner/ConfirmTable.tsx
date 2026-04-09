@@ -3,6 +3,7 @@
 // Client component: manages editable table state for bill confirmation
 
 import { useState } from 'react'
+import { AlertTriangle, X, Plus, ArrowRight } from 'lucide-react'
 import type { NormalisedItem } from '@/lib/ocr/normaliseItems'
 
 export type ConfirmedItem = {
@@ -101,7 +102,11 @@ export default function ConfirmTable({
   const totalAmount = rows.reduce((sum, r) => {
     const qty = parseFloat(r.quantity) || 0
     const price = parseFloat(r.price) || 0
-    return sum + qty * price
+    if (!qty || !price) return sum
+    const itemTotal = qty * price
+    // Sanity cap: skip any single item total above ₹50,000 (likely a parse artefact)
+    if (itemTotal > 50_000) return sum
+    return sum + itemTotal
   }, 0)
 
   function handleConfirm() {
@@ -121,12 +126,7 @@ export default function ConfirmTable({
       {/* Fallback warning */}
       {fallbackUsed && (
         <div className="flex items-start gap-3 bg-tertiary-fixed/30 border border-tertiary-fixed px-4 py-3 rounded-xl">
-          <span
-            className="material-symbols-outlined text-tertiary mt-0.5"
-            style={{ fontVariationSettings: "'FILL' 1" }}
-          >
-            warning
-          </span>
+          <AlertTriangle className="w-4 h-4 text-tertiary mt-0.5 flex-shrink-0" />
           <p className="text-sm text-on-surface/80">
             AI reading unavailable — showing basic scan instead. Please verify all items carefully.
           </p>
@@ -285,12 +285,7 @@ export default function ConfirmTable({
                           className="text-[10px] font-semibold text-tertiary flex items-center gap-1"
                           title="Low confidence — please verify"
                         >
-                          <span
-                            className="material-symbols-outlined text-sm"
-                            style={{ fontVariationSettings: "'FILL' 1" }}
-                          >
-                            warning
-                          </span>
+                          <AlertTriangle className="w-3 h-3" />
                           Verify
                         </span>
                       ) : (
@@ -305,7 +300,7 @@ export default function ConfirmTable({
                         onClick={() => removeRow(row.id)}
                         className="text-on-surface/30 hover:text-error transition-colors"
                       >
-                        <span className="material-symbols-outlined text-sm">close</span>
+                        <X className="w-4 h-4" />
                       </button>
                     </td>
                   </tr>
@@ -321,7 +316,7 @@ export default function ConfirmTable({
           onClick={addEmptyRow}
           className="w-full py-4 text-sm font-semibold text-primary-container hover:bg-surface-container transition-colors flex items-center justify-center gap-2"
         >
-          <span className="material-symbols-outlined text-lg">add</span>
+          <Plus className="w-4 h-4" />
           Add item manually
         </button>
       </div>
@@ -369,9 +364,7 @@ export default function ConfirmTable({
             className="px-10 py-3.5 bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold text-sm rounded-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all active:scale-95 disabled:opacity-40 flex items-center gap-3"
           >
             {isSubmitting ? 'Saving…' : 'Confirm & Add to Stock'}
-            {!isSubmitting && (
-              <span className="material-symbols-outlined text-lg">arrow_forward</span>
-            )}
+            {!isSubmitting && <ArrowRight className="w-4 h-4" />}
           </button>
         </div>
       </div>

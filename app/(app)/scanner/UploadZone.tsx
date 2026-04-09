@@ -2,6 +2,7 @@
 // Client component: needs drag/drop events + file input state
 
 import { useRef, useState } from 'react'
+import { Camera } from 'lucide-react'
 
 type UploadZoneProps = {
   onFileSelect: (file: File) => void
@@ -50,12 +51,7 @@ export default function UploadZone({ onFileSelect, onTextSubmit, disabled = fals
         ].join(' ')}
       >
         <div className="w-16 h-16 bg-primary-fixed rounded-2xl flex items-center justify-center text-primary mb-6">
-          <span
-            className="material-symbols-outlined text-[40px]"
-            style={{ fontVariationSettings: "'FILL' 0" }}
-          >
-            photo_camera
-          </span>
+          <Camera className="w-10 h-10" />
         </div>
 
         <p className="text-lg font-medium text-on-surface mb-2 text-center">

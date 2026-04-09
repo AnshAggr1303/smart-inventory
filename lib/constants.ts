@@ -58,10 +58,10 @@ export const DEMAND_LOOKBACK_DAYS = 30
 export const GROQ_KEY_COUNT = 3
 
 /** Groq model used for tasks that need high reasoning quality */
-export const GROQ_MODEL_LARGE = 'llama3-70b-8192'
+export const GROQ_MODEL_LARGE = 'llama-3.3-70b-versatile'
 
 /** Groq model used for fast, simple extraction tasks */
-export const GROQ_MODEL_FAST = 'llama3-8b-8192'
+export const GROQ_MODEL_FAST = 'llama-3.1-8b-instant'
 
 /** Gemini model used for vision (bill scanning) and co-pilot chat */
 export const GEMINI_MODEL = 'gemini-2.0-flash'

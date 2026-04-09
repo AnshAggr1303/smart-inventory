@@ -3,6 +3,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Sparkles, Receipt, AlertCircle, X, Check, CheckCircle, ArrowRight } from 'lucide-react'
 import UploadZone from './UploadZone'
 import ConfirmTable, { type ConfirmedItem, type BillMeta } from './ConfirmTable'
 import { preprocessImage } from '@/lib/ocr/preprocessImage'
@@ -80,12 +81,16 @@ export default function ScannerPage() {
       setCapturedMimeType(mimeType)
       markStep(0)
 
-      // Stage 1b: Tesseract in parallel (fire and don't await — we use it as fallback)
-      extractTextClient(base64, (pct) => setTesseractProgress(pct))
-        .then((text) => { tesseractText = text })
-        .catch(() => { /* non-fatal */ })
+      // Stage 1b: Run Tesseract client-side before the server call so the
+      // text is available in the POST body as a fallback for the server.
+      try {
+        tesseractText = await extractTextClient(base64, (pct) => setTesseractProgress(pct))
+      } catch (e) {
+        console.warn('[scanner] tesseract failed:', e)
+        tesseractText = ''
+      }
 
-      // Stage 2: Gemini vision extraction
+      // Stage 2: Gemini vision extraction (with tesseractText now populated)
       markStep(1)
       const extractRes = await fetch('/api/ocr/extract', {
         method: 'POST',
@@ -110,7 +115,8 @@ export default function ScannerPage() {
       // Stage 3: normalisation complete (server handled it, just mark done)
       markStep(2)
 
-      if (extractData.items.length === 0) {
+      // Only show error if Gemini AND Tesseract both returned nothing
+      if (extractData.items.length === 0 && extractData.fallback_used && !tesseractText) {
         setError(
           "We couldn't read this bill clearly. Try a clearer photo or enter items manually."
         )
@@ -237,12 +243,7 @@ export default function ScannerPage() {
         <h2 className="text-3xl font-bold tracking-tight text-on-surface">Scan a Bill</h2>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 px-3 py-1.5 bg-tertiary-fixed rounded-full">
-            <span
-              className="material-symbols-outlined text-on-tertiary-fixed text-sm"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              auto_awesome
-            </span>
+            <Sparkles className="w-3.5 h-3.5 text-on-tertiary-fixed" />
             <span className="text-xs font-semibold text-on-tertiary-fixed uppercase tracking-wider">
               Gemini Vision Active
             </span>
@@ -253,14 +254,14 @@ export default function ScannerPage() {
       {/* Error banner */}
       {error && (
         <div className="mb-6 flex items-start gap-3 bg-error-container px-4 py-3 rounded-xl">
-          <span className="material-symbols-outlined text-error mt-0.5">error</span>
+          <AlertCircle className="w-4 h-4 text-error mt-0.5 flex-shrink-0" />
           <p className="text-sm text-on-error-container">{error}</p>
           <button
             type="button"
             onClick={() => setError(null)}
             className="ml-auto text-on-error-container/60 hover:text-on-error-container"
           >
-            <span className="material-symbols-outlined text-sm">close</span>
+            <X className="w-4 h-4" />
           </button>
         </div>
       )}
@@ -274,12 +275,7 @@ export default function ScannerPage() {
           />
           <div className="flex-[1.5] flex items-center justify-center min-h-[360px] bg-surface-container-low rounded-xl">
             <div className="text-center space-y-3 p-8">
-              <span
-                className="material-symbols-outlined text-[48px] text-on-surface/20"
-                style={{ fontVariationSettings: "'FILL' 0" }}
-              >
-                receipt_long
-              </span>
+              <Receipt className="w-12 h-12 text-on-surface/20 mx-auto" />
               <p className="text-sm text-on-surface/40">
                 Your extracted items will appear here
               </p>
@@ -329,7 +325,7 @@ export default function ScannerPage() {
                         ].join(' ')}
                       >
                         {step.done ? (
-                          <span className="material-symbols-outlined text-sm">check</span>
+                          <Check className="w-3.5 h-3.5" />
                         ) : (
                           <span className="text-xs font-bold">{idx + 1}</span>
                         )}
@@ -373,12 +369,7 @@ export default function ScannerPage() {
             style={{ boxShadow: '0 12px 32px -4px rgba(27,28,22,0.06)' }}
           >
             <div className="w-16 h-16 bg-primary-fixed rounded-full flex items-center justify-center text-primary mx-auto mb-6">
-              <span
-                className="material-symbols-outlined text-[40px]"
-                style={{ fontVariationSettings: "'FILL' 1" }}
-              >
-                check_circle
-              </span>
+              <CheckCircle className="w-10 h-10" />
             </div>
             <h3 className="text-2xl font-bold text-on-surface mb-1">
               {successData.itemsAdded} item{successData.itemsAdded !== 1 ? 's' : ''} added to stock
@@ -408,7 +399,7 @@ export default function ScannerPage() {
                 className="w-full py-3.5 bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold text-sm rounded-lg hover:-translate-y-0.5 transition-all active:scale-95 flex items-center justify-center gap-2"
               >
                 View inventory
-                <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
               <button
                 type="button"
