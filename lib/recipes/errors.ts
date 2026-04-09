@@ -11,9 +11,12 @@ export class InsufficientStockError extends Error {
 }
 
 export class RecipeNotFoundError extends Error {
+  readonly recipe_id: string
+
   constructor(recipe_id: string) {
     super(`Recipe not found: ${recipe_id}`)
     this.name = 'RecipeNotFoundError'
+    this.recipe_id = recipe_id
   }
 }
 

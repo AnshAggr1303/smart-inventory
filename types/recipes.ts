@@ -1,4 +1,7 @@
 // types/recipes.ts
+// Query-result shapes for the recipe engine — these include joined data from
+// related tables and differ from the raw DB-row types in types/index.ts.
+// Import these types in recipe feature code (Server Actions, components, lib).
 
 export type RecipeIngredient = {
   id: string

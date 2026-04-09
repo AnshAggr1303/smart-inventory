@@ -122,6 +122,7 @@ export interface Recipe {
   yield_qty: number
   yield_unit: string
   notes: string | null
+  selling_price: number | null
   is_archived: boolean
   created_at: string
   updated_at: string
