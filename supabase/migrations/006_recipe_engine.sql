@@ -8,13 +8,16 @@
 -- ─── 1. selling_price column ──────────────────────────────────────────────────
 
 alter table recipes
-  add column if not exists selling_price numeric(10,2);
+  add column if not exists selling_price numeric(12,2);
 
 -- ─── 2. create_recipe_with_ingredients ───────────────────────────────────────
 
+drop function if exists create_recipe_with_ingredients(
+  uuid, text, text, numeric, text, text, numeric, jsonb
+) cascade;
+
 create or replace function create_recipe_with_ingredients(
   p_org_id        uuid,
-  p_user_id       uuid,
   p_name          text,
   p_category      text,
   p_yield_qty     numeric,
@@ -63,10 +66,14 @@ end;
 $$;
 
 grant execute on function create_recipe_with_ingredients(
-  uuid, uuid, text, text, numeric, text, text, numeric, jsonb
+  uuid, text, text, numeric, text, text, numeric, jsonb
 ) to authenticated;
 
 -- ─── 3. update_recipe_with_ingredients ───────────────────────────────────────
+
+drop function if exists update_recipe_with_ingredients(
+  uuid, uuid, text, text, numeric, text, text, numeric, jsonb
+) cascade;
 
 create or replace function update_recipe_with_ingredients(
   p_org_id        uuid,
@@ -85,7 +92,8 @@ security definer
 set search_path = public
 as $$
 declare
-  v_ing record;
+  v_ing       record;
+  v_row_count int;
 begin
   if not exists (
     select 1 from recipes
@@ -103,6 +111,11 @@ begin
     selling_price = p_selling_price,
     updated_at    = now()
   where id = p_recipe_id and org_id = p_org_id;
+
+  get diagnostics v_row_count = row_count;
+  if v_row_count = 0 then
+    raise exception 'Recipe not found or was modified concurrently';
+  end if;
 
   -- Delete and re-insert — never diff individual rows
   delete from recipe_ingredients
@@ -135,6 +148,10 @@ grant execute on function update_recipe_with_ingredients(
 -- Inserts one transaction per ingredient. The trigger on transactions
 -- updates items.current_stock atomically — never touch current_stock directly.
 
+drop function if exists deduct_recipe(
+  uuid, uuid, uuid, numeric, text
+) cascade;
+
 create or replace function deduct_recipe(
   p_org_id    uuid,
   p_user_id   uuid,
@@ -149,6 +166,13 @@ as $$
 declare
   v_ingredient record;
 begin
+  if not exists (
+    select 1 from recipes
+    where id = p_recipe_id and org_id = p_org_id
+  ) then
+    raise exception 'Recipe not found or access denied';
+  end if;
+
   for v_ingredient in
     select
       ri.item_id,
@@ -156,7 +180,6 @@ begin
       ri.unit,
       ri.unit_multiplier
     from recipe_ingredients ri
-    join items i on i.id = ri.item_id
     where ri.recipe_id = p_recipe_id
       and ri.org_id    = p_org_id
   loop
