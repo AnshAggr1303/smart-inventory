@@ -148,7 +148,7 @@ export async function updateApiKeysAction(
   // Fetch existing encrypted keys
   const { data: existingSettings } = await supabase
     .from('user_settings')
-    .select('groq_keys, gemini_key')
+    .select('groq_keys, gemini_key, groq_key_index')
     .eq('user_id', user.id)
     .single()
 
@@ -182,6 +182,7 @@ export async function updateApiKeysAction(
       org_id,
       groq_keys: JSON.stringify(finalGroqEnc),
       gemini_key: finalGeminiEnc,
+      groq_key_index: existingSettings?.groq_key_index ?? 0,
     },
     { onConflict: 'user_id' }
   )
