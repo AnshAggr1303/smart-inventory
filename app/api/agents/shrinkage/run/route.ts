@@ -1,0 +1,68 @@
+import { type NextRequest } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
+import type { Database } from '@/types/supabase'
+import { runShrinkageAnalysis } from '@/lib/agents/shrinkageAgent'
+
+function createServiceClient() {
+  return createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
+
+export async function GET(req: NextRequest): Promise<Response> {
+  // CRON_SECRET check — must be the very first thing (Rule S5)
+  const authHeader = req.headers.get('authorization')
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const serviceClient = createServiceClient()
+
+  const { data: orgs, error: orgsErr } = await serviceClient
+    .from('organisations')
+    .select('id')
+
+  if (orgsErr || !orgs) {
+    return Response.json({ error: 'Failed to fetch organisations' }, { status: 500 })
+  }
+
+  const summary: { org_id: string; actions_created: number; total_loss_inr: number }[] = []
+
+  for (const org of orgs) {
+    const { data: orgData } = await serviceClient
+      .from('organisations')
+      .select('agent_config')
+      .eq('id', org.id)
+      .single()
+
+    const config = (orgData as unknown as { agent_config: { shrinkage_enabled?: boolean } | null })
+      ?.agent_config
+    if (config?.shrinkage_enabled === false) continue
+
+    const { data: profile } = await serviceClient
+      .from('user_profiles')
+      .select('id')
+      .eq('org_id', org.id)
+      .limit(1)
+      .single()
+
+    if (!profile) continue
+
+    try {
+      const result = await runShrinkageAnalysis(org.id, 7, profile.id, serviceClient)
+      summary.push({ org_id: org.id, actions_created: result.actions_created, total_loss_inr: result.total_loss_inr })
+    } catch {
+      console.error(
+        JSON.stringify({
+          event: 'shrinkage_cron_org_failed',
+          org_id: org.id,
+          timestamp: new Date().toISOString(),
+        })
+      )
+    }
+  }
+
+  const totalCreated = summary.reduce((sum, s) => sum + s.actions_created, 0)
+  return Response.json({ actions_created: totalCreated, orgs_processed: orgs.length, summary })
+}
