@@ -323,11 +323,11 @@ async function handleCopilotChat(
   try {
     const result = await callGroq({
       messages: [{ role: 'user', content: prompt }],
-      model: 'llama3-70b-8192',
+      model: GROQ_MODEL_LARGE,
       user_id,
       org_id,
     })
-    return { result, model_used: 'llama3-70b-8192', fallback_used: false }
+    return { result, model_used: GROQ_MODEL_LARGE, fallback_used: false }
   } catch (groqErr) {
     if (!isLLMFallbackError(groqErr)) throw groqErr
   }
