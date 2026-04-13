@@ -21,13 +21,13 @@ export default async function SuppliersPage() {
 
   const { data: rawSuppliers } = await supabase
     .from('suppliers')
-    .select('id, name, phone, email, address, created_at')
+    .select('id, name, phone, email, created_at')
     .eq('org_id', org_id)
     .order('name')
 
   const suppliers = (rawSuppliers ?? []).map((s) => ({
     ...s,
-    added: format(new Date(s.created_at), 'dd MMM yyyy'),
+    added: s.created_at ? format(new Date(s.created_at), 'dd MMM yyyy') : '—',
   }))
 
   return (

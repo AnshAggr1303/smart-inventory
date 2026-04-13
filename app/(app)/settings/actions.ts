@@ -168,9 +168,6 @@ export async function updateApiKeysAction(
     return existingGroqEncArr[i] ?? null
   })
 
-  // Filter nulls — only store keys that exist
-  const finalGroqEnc = mergedGroqEnc.filter((k): k is string => k !== null)
-
   // Merge Gemini key
   const finalGeminiEnc = newKeys.gemini_key
     ? encryptKey(newKeys.gemini_key)
@@ -180,7 +177,7 @@ export async function updateApiKeysAction(
     {
       user_id: user.id,
       org_id,
-      groq_keys: JSON.stringify(finalGroqEnc),
+      groq_keys: JSON.stringify(mergedGroqEnc),
       gemini_key: finalGeminiEnc,
       groq_key_index: existingSettings?.groq_key_index ?? 0,
     },

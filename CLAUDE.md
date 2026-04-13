@@ -75,6 +75,7 @@ Full detail: /docs/project-overview.md
     /agents/
     /analytics/
     /settings/
+    /suppliers/
 
 /components/
   /ui/                     ← Stitch exported base components
@@ -279,8 +280,11 @@ Cron endpoints verify CRON_SECRET header — first line, always.
 | reorder_agent_panel     | /(app)/agents                |
 | analytics_reports       | /(app)/analytics             |
 
-One screen has no Stitch reference — build from design system:
+Two screens have no Stitch reference — build from design system:
 /(app)/inventory  ← main inventory list page
+/(app)/suppliers  ← suppliers list page
+
+| (none — no Stitch ref)  | /(app)/suppliers             |
 
 ### Critical design rules (from DESIGN.md)
 
@@ -666,3 +670,12 @@ Follow this order:
 8.  Read DESIGN.md before any UI work (U1)
 9.  All constants in /lib/constants.ts (Q5)
 10. When uncertain, choose simpler (Group 9)
+
+## graphify
+
+This project has a graphify knowledge graph at graphify-out/.
+
+Rules:
+- Before answering architecture or codebase questions, read graphify-out/GRAPH_REPORT.md for god nodes and community structure
+- If graphify-out/wiki/index.md exists, navigate it instead of reading raw files
+- After modifying code files in this session, run `python3 -c "from graphify.watch import _rebuild_code; from pathlib import Path; _rebuild_code(Path('.'))"` to keep the graph current
