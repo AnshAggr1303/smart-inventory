@@ -34,7 +34,7 @@ export default function LoginPage() {
 
       // Refresh server state then navigate — middleware routes to correct destination
       router.refresh()
-      router.push('/app/dashboard')
+      router.push('/dashboard')
     })
   }
 

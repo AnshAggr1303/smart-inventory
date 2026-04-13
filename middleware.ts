@@ -94,7 +94,7 @@ export async function middleware(request: NextRequest) {
   if (isOnboardingRoute) {
     // Already finished onboarding → send to dashboard (no infinite loop)
     if (onboardingComplete) {
-      return NextResponse.redirect(new URL('/app/dashboard', request.url))
+      return NextResponse.redirect(new URL('/dashboard', request.url))
     }
     return response
   }
