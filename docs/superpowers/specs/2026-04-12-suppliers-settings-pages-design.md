@@ -161,9 +161,9 @@ Masking logic runs in `page.tsx` (server-side decrypt → last 4 chars only pass
 - "Save keys" primary button + "Cancel" secondary button
 
 **Action (`updateApiKeysAction`):**
-- Validates key prefixes (`gsk_` / `AIza`) with Zod
-- Re-encrypts with AES-256-GCM (Rule S6)
-- Upserts `user_settings` row
+- For each key field: if blank → skip (preserve existing encrypted value in DB); if non-empty → validate prefix (`gsk_` / `AIza`), re-encrypt, write
+- Never overwrites a stored key with null or empty — partial updates are safe
+- Uses `UPDATE ... SET col = CASE WHEN $new IS NOT NULL THEN $new ELSE col END` pattern, or equivalent selective upsert
 - Returns `{ success: true }` or `{ success: false; error: string }`
 
 ---
