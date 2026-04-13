@@ -48,7 +48,6 @@ export async function callGeminiText(params: CallGeminiTextParams): Promise<stri
       contents: [{ parts: [{ text: prompt }] }],
     }),
   })
-
   if (res.status === 429) throw new GeminiRateLimitError()
   if (res.status === 400 || res.status === 403) throw new GeminiKeyMissingError()
   if (!res.ok) throw new Error(`Gemini API error: ${res.status}`)

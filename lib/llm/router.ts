@@ -317,20 +317,32 @@ async function handleCopilotChat(
     recent_transactions: number
   }
 
+  const prompt = copilotPrompt(query, context)
+
+  // Primary: Groq
   try {
-    const result = await callGeminiText({
-      prompt: copilotPrompt(query, context),
+    const result = await callGroq({
+      messages: [{ role: 'user', content: prompt }],
+      model: 'llama3-70b-8192',
       user_id,
       org_id,
     })
-    return { result, model_used: 'gemini-text', fallback_used: false }
-  } catch (err) {
-    if (isLLMFallbackError(err)) {
-      const fallback = copilotFallback(query, context.low_stock_items ?? [])
-      return { result: fallback, model_used: 'fallback', fallback_used: true }
-    }
-    throw err
+    return { result, model_used: 'llama3-70b-8192', fallback_used: false }
+  } catch (groqErr) {
+    if (!isLLMFallbackError(groqErr)) throw groqErr
   }
+
+  // Fallback: Gemini
+  try {
+    const result = await callGeminiText({ prompt, user_id, org_id })
+    return { result, model_used: 'gemini-text', fallback_used: true }
+  } catch (geminiErr) {
+    if (!isLLMFallbackError(geminiErr)) throw geminiErr
+  }
+
+  // Rule-based fallback
+  const fallback = copilotFallback(query, context.low_stock_items ?? [])
+  return { result: fallback, model_used: 'fallback', fallback_used: true }
 }
 
 async function handleShrinkageAnalyse(
