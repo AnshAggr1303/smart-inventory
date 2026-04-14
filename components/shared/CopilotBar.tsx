@@ -13,6 +13,7 @@ export default function CopilotBar() {
   const [query, setQuery] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [response, setResponse] = useState<CopilotResponse | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -44,21 +45,33 @@ export default function CopilotBar() {
     return () => document.removeEventListener('mousedown', onClickOutside)
   }, [])
 
+  function closePopover() {
+    setIsOpen(false)
+    setResponse(null)
+    setError(null)
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!query.trim() || isLoading) return
     setIsLoading(true)
     setIsOpen(true)
+    setError(null)
+    setResponse(null)
     try {
       const res = await fetch('/api/copilot/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: query.trim() }),
       })
+      if (!res.ok) {
+        setError('Could not get answer. Please try again.')
+        return
+      }
       const data: CopilotResponse = await res.json()
       setResponse(data)
     } catch {
-      setResponse({ result: 'Sorry, the copilot is unavailable right now. Please try again.', fallback_used: true })
+      setError('Could not get answer. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -70,6 +83,8 @@ export default function CopilotBar() {
     }
   }
 
+  const showPopover = isOpen && (isLoading || response !== null || error !== null)
+
   return (
     <div ref={containerRef} className="relative w-80">
       <form onSubmit={handleSubmit} className="relative">
@@ -80,7 +95,7 @@ export default function CopilotBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
-          onFocus={() => response && setIsOpen(true)}
+          onFocus={() => (response ?? error) && setIsOpen(true)}
           placeholder="Ask anything… e.g. how much paneer left?"
           className="w-full pl-10 pr-10 py-2 bg-surface-lowest rounded-lg text-body-md text-on-surface placeholder:text-on-surface/40 focus:outline-none focus:ring-2 focus:ring-primary-fixed transition-all"
         />
@@ -89,7 +104,7 @@ export default function CopilotBar() {
         ) : query ? (
           <button
             type="button"
-            onClick={() => { setQuery(''); setIsOpen(false); setResponse(null) }}
+            onClick={() => { setQuery(''); closePopover() }}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface/40 hover:text-on-surface transition-colors"
           >
             <X className="w-4 h-4" />
@@ -97,22 +112,51 @@ export default function CopilotBar() {
         ) : null}
       </form>
 
-      {/* Glassmorphic response panel */}
-      {isOpen && response && !isLoading && (
+      {/* Response popover */}
+      {showPopover && (
         <div
-          className="absolute top-full mt-2 left-0 right-0 z-50 rounded-card p-4"
+          className="absolute top-full mt-2 left-0 right-0 z-50 rounded-xl p-4"
           style={{
-            background: 'rgba(255, 255, 255, 0.85)',
+            background: 'rgba(255, 255, 255, 0.92)',
             backdropFilter: 'blur(12px)',
-            boxShadow: '0 12px 32px -4px rgba(27, 28, 22, 0.06)',
+            boxShadow: '0 12px 32px -4px rgba(27, 28, 22, 0.10)',
           }}
         >
-          {response.fallback_used && (
-            <p className="text-[10px] uppercase tracking-wider font-semibold text-tertiary mb-2">
-              AI offline — rule-based response
-            </p>
+          {/* Close button */}
+          <button
+            type="button"
+            onClick={closePopover}
+            className="absolute top-3 right-3 text-on-surface/40 hover:text-on-surface transition-colors"
+            aria-label="Close"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+
+          {/* Loading state */}
+          {isLoading && (
+            <div className="flex items-center gap-1.5 py-0.5 pr-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce [animation-delay:-0.3s]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce [animation-delay:-0.15s]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" />
+            </div>
           )}
-          <p className="text-body-md text-on-surface leading-relaxed">{response.result}</p>
+
+          {/* Error state */}
+          {error && !isLoading && (
+            <p className="text-body-md text-tertiary pr-6">{error}</p>
+          )}
+
+          {/* Response */}
+          {response && !isLoading && (
+            <div className="pr-6">
+              {response.fallback_used && (
+                <p className="text-[10px] uppercase tracking-wider font-semibold text-tertiary mb-2">
+                  AI offline — rule-based response
+                </p>
+              )}
+              <p className="text-body-md text-on-surface leading-relaxed">{response.result}</p>
+            </div>
+          )}
         </div>
       )}
     </div>
